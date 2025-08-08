@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>METEOROLOGÍA Y AHORRO - España</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #e8f4fd, #d1ecf1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .input-group input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            min-width: 250px;
+        }
+
+        .input-group button {
+            padding: 12px 20px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .input-group button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .chart-container {
+            margin-top: 20px;
+            height: 400px;
+            position: relative;
+        }
+
+        .chart-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .chart-controls label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .chart-controls label:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .chart-controls label.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+
+        .chart-controls input[type="checkbox"] {
+            margin: 0;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .back-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        #weather {
+            min-height: 100px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        #map {
+            height: 400px;
+            border-radius: 12px;
+            margin-top: 15px;
+            border: 2px solid #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .input-group input {
+                min-width: 100%;
+            }
+            
+            .chart-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Estilos para Recomendaciones de Ahorro Energético */
+        .alertas-container {
+            margin-bottom: 20px;
+        }
+
+        .alerta {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 5px solid;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .alerta.critica {
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            border-left-color: #e74c3c;
+            color: #c0392b;
+        }
+
+        .alerta.advertencia {
+            background: linear-gradient(135deg, #fff4e6, #ffe6cc);
+            border-left-color: #f39c12;
+            color: #d68910;
+        }
+
+        .alerta.info {
+            background: linear-gradient(135deg, #e6f3ff, #cce7ff);
+            border-left-color: #3498db;
+            color: #2980b9;
+        }
+
+        .alerta.positiva {
+            background: linear-gradient(135deg, #e8f5e8, #d4f1d4);
+            border-left-color: #27ae60;
+            color: #229954;
+        }
+
+        .recomendaciones-container {
+            margin-bottom: 25px;
+        }
+
+        .recomendaciones-container h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+
+        .consejos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .consejo {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .consejo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .consejo.calefaccion {
+            border-left-color: #e74c3c;
+        }
+
+        .consejo.refrigeracion {
+            border-left-color: #3498db;
+        }
+
+        .consejo.ventilacion {
+            border-left-color: #f39c12;
+        }
+
+        .consejo.general {
+            border-left-color: #27ae60;
+        }
+
+        .consejo.iluminacion {
+            border-left-color: #9b59b6;
+        }
+
+        .consejo-titulo {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .consejo-descripcion {
+            color: #5d6d7e;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .consejos-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .franja-horaria {
+            background: linear-gradient(135deg, #fdfdfe, #f4f6f7);
+            border: 1px solid #d5dbdb;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .franja-hora {
+            font-weight: bold;
+            color: #2c3e50;
+            min-width: 80px;
+        }
+
+        .franja-consejo {
+            flex: 1;
+            color: #5d6d7e;
+        }
+
+        .franja-ahorro {
+            font-weight: 600;
+            color: #27ae60;
+            font-size: 0.9em;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌤️ METEOROLOGÍA Y AHORRO</h1>
+            <p>Datos del tiempo y recomendaciones de eficiencia energética para España</p>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <a href="index.html" class="back-button">
+                ← Volver al Dashboard Principal
+            </a>
+        </div>
+
+        <!-- Weather Card -->
+        <div class="card" id="info-meteorologica">
+            <h3>🌤️ Información Meteorológica</h3>
+            
+            <!-- Botón para refrescar datos meteorológicos -->
+            <div style="text-align: center; margin-bottom: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="refreshWeatherData()" style="
+                  background: linear-gradient(45deg, #3498db, #2980b9);
+                  color: white;
+                  border: none;
+                  padding: 10px 20px;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  font-size: 14px;
+                  font-weight: 700;
+                  transition: all 0.3s ease;
+                  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(52, 152, 219, 0.5)'" 
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(52, 152, 219, 0.4)'">
+                  🔄 ACTUALIZAR DATOS METEOROLÓGICOS
+                </button>
+                <button onclick="clearSessionCache()" style="
+                  background: linear-gradient(45deg, #e74c3c, #c0392b);
+                  color: white;
+                  border: none;
+                  padding: 10px 20px;
+                  border-radius: 8px;
+                  cursor: pointer;
+                  font-size: 14px;
+                  font-weight: 700;
+                  transition: all 0.3s ease;
+                  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+                " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(231, 76, 60, 0.5)'" 
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(231, 76, 60, 0.4)'">
+                  🧹 LIMPIAR CACHÉ
+                </button>
+            </div>
+            
+            <div id="weather">
+                <span class="loading"></span>Cargando información meteorológica...
+            </div>
+            
+            <div class="chart-controls">
+                <label id="temp-label" class="active">
+                    <input type="checkbox" id="temp-checkbox" checked> 
+                    <span>🌡️ Temperatura</span>
+                </label>
+                <label id="humidity-label">
+                    <input type="checkbox" id="humidity-checkbox"> 
+                    <span>💧 Humedad</span>
+                </label>
+                <label id="precipitation-label">
+                    <input type="checkbox" id="precipitation-checkbox"> 
+                    <span>🌧️ Precipitaciones</span>
+                </label>
+            </div>
+            
+            <div class="chart-container">
+                <canvas id="weather-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recomendaciones de Ahorro Energético -->
+        <div class="card" id="recomendaciones-energia">
+            <h3>💡 Recomendaciones de Ahorro Energético</h3>
+            <div class="info-box">
+                <p><strong>🎯 Propósito:</strong> Consejos inteligentes basados en las condiciones meteorológicas actuales y pronóstico del día.</p>
+                <p><strong>⚡ Beneficio:</strong> Optimiza tu consumo energético según la temperatura, humedad y condiciones climáticas.</p>
+            </div>
+            
+            <!-- Alertas Importantes -->
+            <div id="alertas-energia" class="alertas-container">
+                <!-- Las alertas se generarán dinámicamente -->
+            </div>
+            
+            <!-- Recomendaciones del Día -->
+            <div id="recomendaciones-dia" class="recomendaciones-container">
+                <h4>📅 Recomendaciones para Hoy</h4>
+                <div id="consejos-dia" class="consejos-grid">
+                    <!-- Los consejos se generarán dinámicamente -->
+                </div>
+            </div>
+            
+            <!-- Recomendaciones por Horas -->
+            <div id="recomendaciones-horas" class="recomendaciones-container">
+                <h4>🕒 Recomendaciones por Franjas Horarias</h4>
+                <div id="consejos-horas" class="consejos-timeline">
+                    <!-- Los consejos por horas se generarán dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Card -->
+        <div class="card" id="mapa-ubicacion">
+            <h3>📍 Ubicación en España</h3>
+            <div class="info-box">
+                <p><strong>🎯 Propósito:</strong> La página detecta automáticamente tu ubicación y carga datos meteorológicos locales específicos.</p>
+                <p><strong>🖱️ Interactividad:</strong> Haz <strong>doble click</strong> en cualquier parte del mapa para obtener detalles meteorológicos precisos de esa zona dentro del territorio español.</p>
+                <p><strong>🌍 Cobertura:</strong> Toda España, incluyendo Baleares y Canarias. Los datos se actualizan automáticamente según la ubicación seleccionada.</p>
+                <p><strong>📍 Estado:</strong> <span id="location-status">Detectando ubicación...</span></p>
+            </div>
+            <div class="controls">
+                <div class="input-group">
+                    <input type="text" id="ciudad" placeholder="Ej: Madrid, Barcelona, Valencia, Sevilla, Bilbao...">
+                    <button onclick="buscarCiudad()">🔍 Buscar</button>
+                </div>
+            </div>
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let map = null;
+        let currentMarker = null;
+        let weatherChart = null;
+        let currentLocation = {
+            name: 'Madrid',
+            lat: 40.4168,
+            lon: -3.7038,
+            country: 'España',
+            detected: false
+        };
+
+        // Función para detectar ubicación del usuario
+        async function detectUserLocation() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    console.log('🚫 Geolocalización no soportada por el navegador');
+                    resolve(false);
+                    return;
+                }
+
+                console.log('🌍 Detectando ubicación del usuario...');
+                
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        
+                        console.log(`📍 Coordenadas detectadas: ${lat}, ${lon}`);
+                        
+                        // Verificar si está en territorio español (aproximadamente)
+                        if (lat >= 35.0 && lat <= 44.0 && lon >= -10.0 && lon <= 5.0) {
+                            try {
+                                // Obtener nombre de la ciudad usando geocoding reverso
+                                const cityName = await getCityName(lat, lon);
+                                
+                                currentLocation = {
+                                    name: cityName,
+                                    lat: lat,
+                                    lon: lon,
+                                    country: 'España',
+                                    detected: true
+                                };
+                                
+                                console.log(`✅ Ubicación detectada: ${cityName}, España`);
+                                resolve(true);
+                            } catch (error) {
+                                console.warn('⚠️ Error obteniendo nombre de ciudad:', error);
+                                resolve(false);
+                            }
+                        } else {
+                            console.log('🏁 Usuario fuera de España, usando Madrid por defecto');
+                            resolve(false);
+                        }
+                    },
+                    (error) => {
+                        console.warn('❌ Error de geolocalización:', error.message);
+                        resolve(false);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 300000 // 5 minutos
+                    }
+                );
+            });
+        }
+
+        // Función para obtener nombre de ciudad usando geocoding reverso
+        async function getCityName(lat, lon) {
+            try {
+                // Usar OpenStreetMap Nominatim (gratuito)
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=es`);
+                
+                if (!response.ok) throw new Error('Geocoding API error');
+                
+                const data = await response.json();
+                
+                // Extraer nombre de ciudad/pueblo
+                const city = data.address?.city || 
+                           data.address?.town || 
+                           data.address?.village || 
+                           data.address?.municipality ||
+                           data.address?.state ||
+                           'Ubicación detectada';
+                
+                return city;
+            } catch (error) {
+                console.warn('Error en geocoding:', error);
+                return 'Ubicación detectada';
+            }
+        }
+
+        // Configuración de caché
+        const CACHE_CONFIG = {
+            WEATHER_TTL: 15 * 60 * 1000,         // 15 minutos
+            MAX_WEATHER_CALLS_PER_DAY: 800       // Límite de seguridad
+        };
+
+        // Clase para gestión de caché
+        class CacheManager {
+            constructor() {
+                this.sessionCounters = new Map();
+            }
+
+            canMakeWeatherCall() {
+                const today = new Date().toDateString();
+                const sessionKey = `weather_calls_${today}`;
+                const current = parseInt(sessionStorage.getItem(sessionKey) || '0');
+                
+                if (current >= CACHE_CONFIG.MAX_WEATHER_CALLS_PER_DAY) {
+                    console.warn(`⚠️ Límite de llamadas meteorológicas alcanzado: ${current}/${CACHE_CONFIG.MAX_WEATHER_CALLS_PER_DAY}`);
+                    return false;
+                }
+                
+                return true;
+            }
+
+            incrementWeatherCallCounter() {
+                const today = new Date().toDateString();
+                const sessionKey = `weather_calls_${today}`;
+                const current = parseInt(sessionStorage.getItem(sessionKey) || '0');
+                sessionStorage.setItem(sessionKey, (current + 1).toString());
+                console.log(`🌤️ Llamadas meteorológicas: ${current + 1}/${CACHE_CONFIG.MAX_WEATHER_CALLS_PER_DAY}`);
+            }
+        }
+
+        const cacheManager = new CacheManager();
+
+        // Función para limpiar caché
+        function clearSessionCache() {
+            console.log('🧹 Limpiando caché de sesión...');
+            
+            const keysToRemove = [];
+            for (let i = 0; i < sessionStorage.length; i++) {
+                const key = sessionStorage.key(i);
+                if (key && (key.startsWith('weather_') || key.startsWith('cache_'))) {
+                    keysToRemove.push(key);
+                }
+            }
+            
+            keysToRemove.forEach(key => sessionStorage.removeItem(key));
+            
+            // Recargar datos meteorológicos automáticamente
+            setTimeout(() => {
+                console.log('🔄 Recargando datos meteorológicos después de limpiar caché...');
+                loadWeatherData();
+            }, 500);
+            
+            alert('✅ Caché limpiado correctamente. Los datos se actualizarán automáticamente.');
+        }
+
+        // Función para refrescar datos meteorológicos
+        function refreshWeatherData() {
+            console.log('🔄 Refrescando datos meteorológicos...');
+            loadWeatherData();
+        }
+
+        // Función para generar datos meteorológicos de 24 horas completas
+        function generateFullDayWeatherData(apiData) {
+            console.log('📊 Usando datos directos de la API:', apiData.source);
+            
+            // Si Open-Meteo tiene datos de 24 horas, usarlos directamente
+            if (apiData.source === 'Open-Meteo' && apiData.labels.length >= 20) {
+                const now = new Date();
+                const currentHour = now.getHours();
+                
+                // Generar etiquetas de 24 horas
+                const labels = [];
+                for (let i = 0; i < 24; i++) {
+                    labels.push(`${i.toString().padStart(2, '0')}:00`);
+                }
+                
+                // Usar directamente los datos de la API (son por horas)
+                const temperatures = apiData.temperatures.slice(0, 24);
+                const humidity = apiData.humidity.slice(0, 24);
+                const precipitation = apiData.precipitation.slice(0, 24);
+                
+                // Completar hasta 24 si es necesario
+                while (temperatures.length < 24) {
+                    temperatures.push(temperatures[temperatures.length - 1]);
+                    humidity.push(humidity[humidity.length - 1]);
+                    precipitation.push(precipitation[precipitation.length - 1]);
+                }
+                
+                return {
+                    labels,
+                    temperatures,
+                    humidity,
+                    precipitation,
+                    currentHour,
+                    source: apiData.source
+                };
+            }
+            
+            // Para OpenWeatherMap (datos cada 3 horas), usar directamente sin interpolar
+            if (apiData.source === 'OpenWeatherMap') {
+                const now = new Date();
+                const currentHour = now.getHours();
+                
+                return {
+                    labels: apiData.labels,
+                    temperatures: apiData.temperatures,
+                    humidity: apiData.humidity,
+                    precipitation: apiData.precipitation,
+                    currentHour,
+                    source: apiData.source
+                };
+            }
+            
+            // Fallback para otros casos
+            return {
+                labels: apiData.labels,
+                temperatures: apiData.temperatures,
+                humidity: apiData.humidity,
+                precipitation: apiData.precipitation,
+                currentHour: new Date().getHours(),
+                source: apiData.source
+            };
+        }
+
+        // Función para renderizar el gráfico meteorológico
+        function renderWeatherChart(ctx, data) {
+            if (weatherChart) {
+                weatherChart.destroy();
+            }
+
+            // Generar datos para 24 horas completas
+            const fullDayData = generateFullDayWeatherData(data);
+            const currentHour = new Date().getHours();
+            
+            // Separar datos en pasado y futuro CON CONTINUIDAD
+            const pastTemperatures = [];
+            const futureTemperatures = [];
+            const pastHumidity = [];
+            const futureHumidity = [];
+            const pastPrecipitation = [];
+            const futurePrecipitation = [];
+            
+            fullDayData.labels.forEach((label, index) => {
+                const hour = parseInt(label.split(':')[0]);
+                
+                if (hour <= currentHour) {
+                    // Datos del pasado y presente
+                    pastTemperatures.push(fullDayData.temperatures[index]);
+                    pastHumidity.push(fullDayData.humidity[index]);
+                    pastPrecipitation.push(fullDayData.precipitation[index]);
+                    
+                    // Para futuro: solo mostrar el punto actual (último del pasado) para crear continuidad
+                    if (hour === currentHour) {
+                        futureTemperatures.push(fullDayData.temperatures[index]);
+                        futureHumidity.push(fullDayData.humidity[index]);
+                        futurePrecipitation.push(fullDayData.precipitation[index]);
+                    } else {
+                        futureTemperatures.push(null);
+                        futureHumidity.push(null);
+                        futurePrecipitation.push(null);
+                    }
+                } else {
+                    // Datos del futuro
+                    pastTemperatures.push(null);
+                    pastHumidity.push(null);
+                    pastPrecipitation.push(null);
+                    
+                    futureTemperatures.push(fullDayData.temperatures[index]);
+                    futureHumidity.push(fullDayData.humidity[index]);
+                    futurePrecipitation.push(fullDayData.precipitation[index]);
+                }
+            });
+
+            const datasets = [
+                {
+                    label: "Temperatura Registrada (°C)",
+                    data: pastTemperatures,
+                    borderColor: "#2c3e50",
+                    backgroundColor: "rgba(44, 62, 80, 0.1)",
+                    fill: false,
+                    tension: 0.3,
+                    hidden: false,
+                    borderWidth: 3,
+                    pointBackgroundColor: "#2c3e50",
+                    pointBorderColor: "#ffffff",
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                },
+                {
+                    label: "Temperatura Prevista (°C)",
+                    data: futureTemperatures,
+                    borderColor: "#3498db",
+                    backgroundColor: "rgba(52, 152, 219, 0.1)",
+                    fill: false,
+                    tension: 0.3,
+                    hidden: false,
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: "#3498db",
+                    pointBorderColor: "#ffffff",
+                    pointBorderWidth: 2,
+                    pointRadius: 3
+                },
+                {
+                    label: "Humedad Registrada (%)",
+                    data: pastHumidity,
+                    borderColor: "#27ae60",
+                    backgroundColor: "rgba(39, 174, 96, 0.1)",
+                    fill: false,
+                    tension: 0.3,
+                    hidden: true,
+                    borderWidth: 3,
+                    pointBackgroundColor: "#27ae60",
+                    pointRadius: 3
+                },
+                {
+                    label: "Humedad Prevista (%)",
+                    data: futureHumidity,
+                    borderColor: "#2ecc71",
+                    backgroundColor: "rgba(46, 204, 113, 0.1)",
+                    fill: false,
+                    tension: 0.3,
+                    hidden: true,
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: "#2ecc71",
+                    pointRadius: 2
+                },
+                {
+                    label: "Precipitaciones Registradas (%)",
+                    data: pastPrecipitation,
+                    borderColor: "#e74c3c",
+                    backgroundColor: "rgba(231, 76, 60, 0.1)",
+                    fill: false,
+                    tension: 0.3,
+                    hidden: true,
+                    borderWidth: 3,
+                    pointBackgroundColor: "#e74c3c",
+                    pointRadius: 3
+                },
+                {
+                    label: "Precipitaciones Previstas (%)",
+                    data: futurePrecipitation,
+                    borderColor: "#c0392b",
+                    backgroundColor: "rgba(192, 57, 43, 0.1)",
+                    fill: false,
+                    tension: 0.3,
+                    hidden: true,
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointBackgroundColor: "#c0392b",
+                    pointRadius: 2
+                }
+            ];
+
+            weatherChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: fullDayData.labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Hora del Día (24h)"
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: "Valores"
+                            },
+                            grid: {
+                                display: true,
+                                color: 'rgba(0,0,0,0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { 
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    const index = context[0].dataIndex;
+                                    const hour = fullDayData.labels[index];
+                                    let status = '';
+                                    if (index === currentHour) status = ' (🔴 ACTUAL)';
+                                    else if (index < currentHour) status = ' (📊 Registrado)';
+                                    else status = ' (🔮 Pronóstico)';
+                                    return hour + status;
+                                },
+                                label: function(context) {
+                                    const label = context.dataset.label;
+                                    const value = Math.round(context.parsed.y);
+                                    if (label.includes('Temperatura')) return `${label}: ${value}°C`;
+                                    if (label.includes('Humedad')) return `${label}: ${value}%`;
+                                    if (label.includes('Precipitación')) return `${label}: ${value}%`;
+                                    return `${label}: ${value}`;
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            hoverRadius: 6
+                        }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    }
+                },
+                plugins: [{
+                    id: 'currentTimeLine',
+                    afterDraw: function(chart) {
+                        const ctx = chart.ctx;
+                        const chartArea = chart.chartArea;
+                        const currentHour = new Date().getHours();
+                        
+                        // Encontrar el índice de la hora actual
+                        let currentIndex = -1;
+                        if (fullDayData.source === 'Open-Meteo') {
+                            currentIndex = currentHour;
+                        } else {
+                            // Para OpenWeatherMap, calcular basado en los labels
+                            const now = new Date();
+                            const currentTime = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+                            currentIndex = fullDayData.labels.findIndex(label => {
+                                const labelHour = parseInt(label.split(':')[0]);
+                                const currentHourInt = parseInt(currentTime.split(':')[0]);
+                                return Math.abs(labelHour - currentHourInt) <= 1;
+                            });
+                        }
+                        
+                        if (currentIndex >= 0 && currentIndex < fullDayData.labels.length) {
+                            const x = chart.scales.x.getPixelForValue(currentIndex);
+                            
+                            // Dibujar línea vertical roja
+                            ctx.save();
+                            ctx.strokeStyle = '#e74c3c';
+                            ctx.lineWidth = 3;
+                            ctx.setLineDash([5, 5]);
+                            ctx.beginPath();
+                            ctx.moveTo(x, chartArea.top);
+                            ctx.lineTo(x, chartArea.bottom);
+                            ctx.stroke();
+                            
+                            // Agregar etiqueta "AHORA"
+                            ctx.fillStyle = '#e74c3c';
+                            ctx.font = 'bold 12px Arial';
+                            ctx.textAlign = 'center';
+                            ctx.fillText('🔴 AHORA', x, chartArea.top - 10);
+                            ctx.restore();
+                        }
+                    }
+                }]
+            });
+        }
+
+        // Configurar controles del gráfico meteorológico
+        function setupWeatherControls() {
+            const controlIds = ['temp-checkbox', 'humidity-checkbox', 'precipitation-checkbox'];
+            const labelIds = ['temp-label', 'humidity-label', 'precipitation-label'];
+
+            function updateVisibility(activeMetric) {
+                if (!weatherChart) return;
+                
+                for (let i = 0; i < 6; i++) {
+                    const datasetMeta = weatherChart.getDatasetMeta(i);
+                    if (datasetMeta) {
+                        switch (activeMetric) {
+                            case 0: // Temperatura
+                                datasetMeta.hidden = !(i === 0 || i === 1);
+                                break;
+                            case 1: // Humedad
+                                datasetMeta.hidden = !(i === 2 || i === 3);
+                                break;
+                            case 2: // Precipitaciones
+                                datasetMeta.hidden = !(i === 4 || i === 5);
+                                break;
+                            default:
+                                datasetMeta.hidden = true;
+                        }
+                    }
+                }
+                
+                labelIds.forEach((labelId, index) => {
+                    const label = document.getElementById(labelId);
+                    if (label) {
+                        if (index === activeMetric) {
+                            label.classList.add('active');
+                        } else {
+                            label.classList.remove('active');
+                        }
+                    }
+                });
+                
+                weatherChart.update();
+            }
+
+            controlIds.forEach((id, index) => {
+                const checkbox = document.getElementById(id);
+                if (checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            controlIds.forEach((otherId, otherIndex) => {
+                                if (otherIndex !== index) {
+                                    const otherCheckbox = document.getElementById(otherId);
+                                    if (otherCheckbox) otherCheckbox.checked = false;
+                                }
+                            });
+                            updateVisibility(index);
+                        } else {
+                            updateVisibility(0);
+                            const tempCheckbox = document.getElementById('temp-checkbox');
+                            if (tempCheckbox) tempCheckbox.checked = true;
+                        }
+                    });
+                }
+            });
+
+            setTimeout(() => {
+                const tempCheckbox = document.getElementById('temp-checkbox');
+                if (tempCheckbox) {
+                    tempCheckbox.checked = true;
+                    updateVisibility(0);
+                }
+            }, 100);
+        }
+
+        // ===== SISTEMA DE RECOMENDACIONES DE AHORRO ENERGÉTICO =====
+
+        // Función principal para generar todas las recomendaciones
+        function generateEnergyRecommendations(weatherData) {
+            if (!weatherData || !weatherData.temperatures) return;
+
+            console.log('💡 Generando recomendaciones de ahorro energético...');
+            
+            const fullDayData = generateFullDayWeatherData(weatherData);
+            const currentHour = new Date().getHours();
+            
+            // Analizar datos meteorológicos
+            const analysis = analyzeWeatherConditions(fullDayData, currentHour);
+            
+            // Generar alertas importantes
+            generateEnergyAlerts(analysis);
+            
+            // Generar recomendaciones para el día
+            generateDailyRecommendations(analysis);
+            
+            // Generar recomendaciones por franjas horarias
+            generateHourlyRecommendations(fullDayData, currentHour);
+        }
+
+        // Analizar condiciones meteorológicas para determinar estrategias de ahorro
+        function analyzeWeatherConditions(fullDayData, currentHour) {
+            const temps = fullDayData.temperatures;
+            const humidity = fullDayData.humidity;
+            const precipitation = fullDayData.precipitation;
+            
+            const currentTemp = temps[currentHour] || temps[0];
+            const currentHumidity = humidity[currentHour] || humidity[0];
+            const currentPrecip = precipitation[currentHour] || precipitation[0];
+            
+            // Calcular temperaturas del día
+            const minTemp = Math.min(...temps.filter(t => t !== undefined));
+            const maxTemp = Math.max(...temps.filter(t => t !== undefined));
+            const avgTemp = temps.reduce((sum, t) => sum + (t || 0), 0) / temps.length;
+            
+            // Detectar tendencias
+            const tempTrend = detectTemperatureTrend(temps, currentHour);
+            const comfortZone = currentTemp >= 18 && currentTemp <= 25;
+            
+            // Detectar condiciones especiales
+            const heatWave = maxTemp > 35;
+            const coldWave = minTemp < 5;
+            const highHumidity = currentHumidity > 70;
+            const lowHumidity = currentHumidity < 30;
+            const rainExpected = precipitation.some(p => p > 50);
+            
+            return {
+                current: { temp: currentTemp, humidity: currentHumidity, precipitation: currentPrecip },
+                daily: { minTemp, maxTemp, avgTemp },
+                trends: { tempTrend, comfortZone },
+                conditions: { heatWave, coldWave, highHumidity, lowHumidity, rainExpected },
+                fullData: fullDayData
+            };
+        }
+
+        // Detectar tendencia de temperatura
+        function detectTemperatureTrend(temps, currentHour) {
+            if (currentHour >= temps.length - 3) return 'stable';
+            
+            const nextHours = temps.slice(currentHour, currentHour + 3);
+            const currentTemp = temps[currentHour];
+            
+            if (nextHours.every(t => t > currentTemp + 1)) return 'rising';
+            if (nextHours.every(t => t < currentTemp - 1)) return 'falling';
+            return 'stable';
+        }
+
+        // Generar alertas importantes
+        function generateEnergyAlerts(analysis) {
+            const alertsContainer = document.getElementById('alertas-energia');
+            if (!alertsContainer) return;
+
+            const alerts = [];
+            
+            // Alerta de ola de calor
+            if (analysis.conditions.heatWave) {
+                alerts.push({
+                    type: 'critica',
+                    icon: '🔥',
+                    title: 'Alerta: Ola de Calor',
+                    message: `Temperatura máxima de ${analysis.daily.maxTemp}°C. Prepara sistemas de refrigeración eficientes y considera desplazar actividades que generen calor.`
+                });
+            }
+            
+            // Alerta de ola de frío
+            if (analysis.conditions.coldWave) {
+                alerts.push({
+                    type: 'critica',
+                    icon: '🥶',
+                    title: 'Alerta: Ola de Frío',
+                    message: `Temperatura mínima de ${analysis.daily.minTemp}°C. Revisa el aislamiento de tu hogar y programa la calefacción de manera eficiente.`
+                });
+            }
+            
+            // Alerta de cambio brusco de temperatura
+            if (analysis.daily.maxTemp - analysis.daily.minTemp > 15) {
+                alerts.push({
+                    type: 'advertencia',
+                    icon: '🌡️',
+                    title: 'Cambio Térmico Pronunciado',
+                    message: `Variación de ${(analysis.daily.maxTemp - analysis.daily.minTemp).toFixed(1)}°C en el día. Ajusta termostatos gradualmente para mayor eficiencia.`
+                });
+            }
+            
+            // Alerta de humedad alta
+            if (analysis.conditions.highHumidity) {
+                alerts.push({
+                    type: 'info',
+                    icon: '💧',
+                    title: 'Humedad Elevada',
+                    message: `Humedad del ${analysis.current.humidity}%. Usa deshumidificadores y evita generar vapor adicional (duchas largas, cocinar con ollas abiertas).`
+                });
+            }
+            
+            // Alerta de condiciones ideales
+            if (analysis.trends.comfortZone && !analysis.conditions.heatWave && !analysis.conditions.coldWave) {
+                alerts.push({
+                    type: 'positiva',
+                    icon: '✨',
+                    title: 'Condiciones Ideales',
+                    message: `Temperatura confortable de ${analysis.current.temp}°C. Perfecto para minimizar uso de calefacción/refrigeración y maximizar ventilación natural.`
+                });
+            }
+
+            // Renderizar alertas
+            alertsContainer.innerHTML = alerts.map(alert => `
+                <div class="alerta ${alert.type}">
+                    <div style="font-size: 1.5em;">${alert.icon}</div>
+                    <div>
+                        <div style="font-weight: bold; margin-bottom: 5px;">${alert.title}</div>
+                        <div>${alert.message}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Función para obtener datos meteorológicos reales
+        async function fetchRealWeatherData() {
+            if (!cacheManager.canMakeWeatherCall()) {
+                throw new Error('Límite de llamadas meteorológicas alcanzado');
+            }
+
+            const apis = [
+                // OpenWeatherMap con clave de usuario
+                async () => {
+                    const API_KEY = '2e7c789fef35b1b26b35c17e0eccc5dd';
+                    if (!API_KEY) throw new Error('No API key for OpenWeatherMap');
+                    
+                    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${currentLocation.lat}&lon=${currentLocation.lon}&appid=${API_KEY}&units=metric&lang=es`;
+                    console.log('🌤️ Intentando OpenWeatherMap...');
+                    
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`OpenWeatherMap error: ${response.status}`);
+                    
+                    const data = await response.json();
+                    return processOpenWeatherMapForecastData(data);
+                },
+                
+                // Open-Meteo
+                async () => {
+                    const url = `https://api.open-meteo.com/v1/forecast?latitude=${currentLocation.lat}&longitude=${currentLocation.lon}&hourly=temperature_2m,relative_humidity_2m,precipitation_probability&timezone=Europe/Madrid&forecast_days=1`;
+                    console.log('🌤️ Intentando Open-Meteo...');
+                    
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`Open-Meteo error: ${response.status}`);
+                    
+                    const data = await response.json();
+                    return processOpenMeteoData(data);
+                }
+            ];
+
+            // Intentar cada API
+            for (const apiCall of apis) {
+                try {
+                    const result = await apiCall();
+                    cacheManager.incrementWeatherCallCounter();
+                    return result;
+                } catch (error) {
+                    console.warn('API falló:', error.message);
+                }
+            }
+
+            throw new Error('Todas las APIs meteorológicas fallaron');
+        }
+
+        // Procesar datos de OpenWeatherMap Forecast
+        function processOpenWeatherMapForecastData(data) {
+            console.log('✅ Datos de OpenWeatherMap Forecast procesados exitosamente');
+            
+            const current = data.list[0];
+            const labels = [];
+            const temperatures = [];
+            const humidity = [];
+            const precipitation = [];
+
+            // Tomar más elementos para cubrir mejor las 24 horas (cada 3 horas)
+            for (let i = 0; i < Math.min(12, data.list.length); i++) {
+                const item = data.list[i];
+                const date = new Date(item.dt * 1000);
+                labels.push(date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
+                temperatures.push(Math.round(item.main.temp));
+                humidity.push(Math.round(item.main.humidity));
+                precipitation.push(Math.round(item.pop * 100)); // Probabilidad de precipitación
+            }
+
+            return {
+                labels,
+                temperatures,
+                humidity,
+                precipitation,
+                current: {
+                    temp: Math.round(current.main.temp),
+                    humidity: Math.round(current.main.humidity),
+                    precipitation: Math.round(current.pop * 100)
+                },
+                source: 'OpenWeatherMap'
+            };
+        }
+
+        // Procesar datos de Open-Meteo
+        function processOpenMeteoData(data) {
+            console.log('✅ Datos de Open-Meteo procesados exitosamente');
+            
+            const hourly = data.hourly;
+            const labels = [];
+            const temperatures = [];
+            const humidity = [];
+            const precipitation = [];
+
+            // Tomar todas las 24 horas disponibles
+            for (let i = 0; i < Math.min(24, hourly.time.length); i++) {
+                const date = new Date(hourly.time[i]);
+                labels.push(date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }));
+                temperatures.push(Math.round(hourly.temperature_2m[i]));
+                humidity.push(Math.round(hourly.relative_humidity_2m[i]));
+                precipitation.push(Math.round(hourly.precipitation_probability[i] || 0));
+            }
+
+            return {
+                labels,
+                temperatures,
+                humidity,
+                precipitation,
+                current: {
+                    temp: Math.round(hourly.temperature_2m[0]),
+                    humidity: Math.round(hourly.relative_humidity_2m[0]),
+                    precipitation: Math.round(hourly.precipitation_probability[0] || 0)
+                },
+                source: 'Open-Meteo'
+            };
+        }
+
+        // Generar datos meteorológicos simulados específicos para Madrid
+        function generateMadridSpecificWeatherData() {
+            const now = new Date();
+            const hour = now.getHours();
+            const season = getSeason();
+            
+            // Temperaturas base según estación y hora
+            let baseTemp = 15;
+            if (season === 'verano') baseTemp = 28;
+            else if (season === 'invierno') baseTemp = 8;
+            else if (season === 'primavera') baseTemp = 18;
+            else baseTemp = 12; // otoño
+
+            // Ajustar según hora del día actual
+            if (hour >= 6 && hour <= 12) baseTemp += 2;
+            else if (hour >= 13 && hour <= 16) baseTemp += 5;
+            else if (hour >= 17 && hour <= 20) baseTemp += 2;
+            else baseTemp -= 3;
+
+            const labels = [];
+            const temperatures = [];
+            const humidity = [];
+            const precipitation = [];
+
+            // Temperatura inicial con pequeña variación
+            let currentTemp = baseTemp + (Math.random() - 0.5) * 2;
+
+            for (let i = 0; i < 8; i++) {
+                const futureHour = (hour + i * 3) % 24;
+                labels.push(`${futureHour.toString().padStart(2, '0')}:00`);
+                
+                // Calcular temperatura realista basada en la hora del día
+                let hourlyTempBase = baseTemp;
+                if (futureHour >= 6 && futureHour <= 12) hourlyTempBase += 2;
+                else if (futureHour >= 13 && futureHour <= 16) hourlyTempBase += 5;
+                else if (futureHour >= 17 && futureHour <= 20) hourlyTempBase += 2;
+                else hourlyTempBase -= 3;
+
+                // Aplicar cambio gradual (máximo ±1.5°C por hora)
+                const maxChange = 1.5;
+                const targetTemp = hourlyTempBase + (Math.random() - 0.5) * 2;
+                const tempDiff = targetTemp - currentTemp;
+                const actualChange = Math.sign(tempDiff) * Math.min(Math.abs(tempDiff), maxChange);
+                
+                currentTemp += actualChange;
+                temperatures.push(Math.round(currentTemp * 10) / 10); // Redondear a 1 decimal
+                
+                const baseHumidity = season === 'invierno' ? 70 : 50;
+                humidity.push(Math.round(baseHumidity + (Math.random() - 0.5) * 20));
+                
+                const basePrecip = season === 'verano' ? 10 : 30;
+                precipitation.push(Math.round(Math.max(0, basePrecip + (Math.random() - 0.5) * 40)));
+            }
+
+            return {
+                labels,
+                temperatures,
+                humidity,
+                precipitation,
+                current: {
+                    temp: temperatures[0],
+                    humidity: humidity[0],
+                    precipitation: precipitation[0]
+                },
+                source: 'Simulación Madrid'
+            };
+        }
+
+        // Obtener estación del año
+        function getSeason() {
+            const month = new Date().getMonth() + 1;
+            if (month >= 6 && month <= 8) return 'verano';
+            if (month >= 12 || month <= 2) return 'invierno';
+            if (month >= 3 && month <= 5) return 'primavera';
+            return 'otoño';
+        }
+
+        // Actualizar visualización meteorológica
+        function updateWeatherDisplay(weatherElement, data) {
+            if (!weatherElement || !data) return;
+
+            const currentTemp = data.current ? data.current.temp : data.temperatures[0];
+            const currentHumidity = data.current ? data.current.humidity : data.humidity[0];
+            const currentPrecip = data.current ? data.current.precipitation : data.precipitation[0];
+
+            weatherElement.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                    <div style="background: linear-gradient(135deg, #ff7675, #fd79a8); padding: 15px; border-radius: 10px; color: white; text-align: center;">
+                        <div id="temp-display" style="font-size: 2rem; font-weight: bold;">${currentTemp}°C</div>
+                        <div style="opacity: 0.9;">🌡️ Temperatura</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #74b9ff, #0984e3); padding: 15px; border-radius: 10px; color: white; text-align: center;">
+                        <div id="humidity-display" style="font-size: 2rem; font-weight: bold;">${currentHumidity}%</div>
+                        <div style="opacity: 0.9;">💧 Humedad</div>
+                    </div>
+                    <div style="background: linear-gradient(135deg, #a29bfe, #6c5ce7); padding: 15px; border-radius: 10px; color: white; text-align: center;">
+                        <div id="precip-display" style="font-size: 2rem; font-weight: bold;">${currentPrecip}%</div>
+                        <div style="opacity: 0.9;">🌧️ Precipitación</div>
+                    </div>
+                </div>
+                <div style="text-align: center; color: #7f8c8d; font-size: 0.9rem; margin-top: 10px;">
+                    📍 <strong>${currentLocation.name}</strong> | 🕒 ${new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+            `;
+        }
+
+        // Función para actualizar solo los valores del display (sincronizado con gráfica)
+        function updateWeatherDisplayWithSyncedData(weatherElement, syncedData) {
+            const tempDisplay = document.getElementById('temp-display');
+            const humidityDisplay = document.getElementById('humidity-display');
+            const precipDisplay = document.getElementById('precip-display');
+            
+            if (tempDisplay && syncedData.temp !== undefined) {
+                tempDisplay.textContent = `${syncedData.temp}°C`;
+            }
+            if (humidityDisplay && syncedData.humidity !== undefined) {
+                humidityDisplay.textContent = `${syncedData.humidity}%`;
+            }
+            if (precipDisplay && syncedData.precipitation !== undefined) {
+                precipDisplay.textContent = `${syncedData.precipitation}%`;
+            }
+        }
+
+        // Cargar datos meteorológicos
+        async function loadWeatherData() {
+            const weatherElement = document.getElementById("weather");
+            const weatherCtx = document.getElementById("weather-chart").getContext("2d");
+
+            try {
+                showLoading("weather");
+                
+                // Intentar detectar ubicación del usuario primero
+                const locationDetected = await detectUserLocation();
+                
+                if (!locationDetected) {
+                    console.log('🏙️ Configurando Madrid como ubicación por defecto');
+                    currentLocation = {
+                        name: 'Madrid',
+                        lat: 40.4168,
+                        lon: -3.7038,
+                        country: 'España',
+                        detected: false
+                    };
+                }
+                
+                console.log(`🌤️ Cargando datos meteorológicos para ${currentLocation.name}...`);
+                
+                let weatherData = null;
+                let dataSource = '';
+                
+                try {
+                    weatherData = await fetchRealWeatherData();
+                    dataSource = 'Datos reales obtenidos desde API';
+                    console.log('✅ Datos meteorológicos reales cargados exitosamente');
+                } catch (apiError) {
+                    console.warn('⚠️ Error al obtener datos reales:', apiError.message);
+                    console.log('🎲 Generando datos simulados para Madrid...');
+                    weatherData = generateMadridSpecificWeatherData();
+                    dataSource = 'Datos simulados específicos para Madrid (API no disponible)';
+                }
+                
+                updateWeatherDisplay(weatherElement, weatherData);
+                
+                // Generar datos para la gráfica
+                const fullDayData = generateFullDayWeatherData(weatherData);
+                
+                // Actualizar el display con la temperatura actual de la gráfica
+                const currentHour = new Date().getHours();
+                let currentTemp, currentHumidity, currentPrecip;
+                
+                if (fullDayData.source === 'Open-Meteo' && fullDayData.temperatures.length >= 24) {
+                    // Para Open-Meteo, usar directamente la hora actual
+                    currentTemp = fullDayData.temperatures[currentHour];
+                    currentHumidity = fullDayData.humidity[currentHour];
+                    currentPrecip = fullDayData.precipitation[currentHour];
+                } else {
+                    // Para OpenWeatherMap o otros, encontrar el dato más cercano a la hora actual
+                    let closestIndex = 0;
+                    let minDiff = Number.MAX_VALUE;
+                    
+                    for (let i = 0; i < fullDayData.labels.length; i++) {
+                        const labelHour = parseInt(fullDayData.labels[i].split(':')[0]);
+                        const diff = Math.abs(labelHour - currentHour);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            closestIndex = i;
+                        }
+                    }
+                    
+                    currentTemp = fullDayData.temperatures[closestIndex];
+                    currentHumidity = fullDayData.humidity[closestIndex];
+                    currentPrecip = fullDayData.precipitation[closestIndex];
+                }
+                
+                // Actualizar el display con los datos sincronizados con la gráfica
+                updateWeatherDisplayWithSyncedData(weatherElement, {
+                    temp: currentTemp,
+                    humidity: currentHumidity,
+                    precipitation: currentPrecip
+                });
+                
+                renderWeatherChart(weatherCtx, weatherData);
+                setupWeatherControls();
+                
+                const sourceIndicator = weatherElement.querySelector('.weather-source') || 
+                                       document.createElement('div');
+                sourceIndicator.className = 'weather-source';
+                sourceIndicator.style.cssText = 'font-size: 0.8em; color: #666; margin-top: 5px; text-align: center;';
+                sourceIndicator.textContent = `📊 ${dataSource}`;
+                
+                if (!weatherElement.querySelector('.weather-source')) {
+                    weatherElement.appendChild(sourceIndicator);
+                }
+                
+                hideLoading("weather");
+                
+                // Actualizar status de ubicación
+                updateLocationStatus();
+                
+                // Generar recomendaciones de ahorro energético
+                generateEnergyRecommendations(weatherData);
+
+            } catch (err) {
+                hideLoading("weather");
+                console.error("Error crítico en carga meteorológica:", err);
+                
+                // Actualizar status con error
+                updateLocationStatus('❌ Error cargando datos meteorológicos');
+                
+                const emergencyData = generateMadridSpecificWeatherData();
+                updateWeatherDisplay(weatherElement, emergencyData);
+                
+                // Sincronizar con los datos de la gráfica también para emergencia
+                const fullDayEmergencyData = generateFullDayWeatherData(emergencyData);
+                const currentHour = new Date().getHours();
+                
+                updateWeatherDisplayWithSyncedData(weatherElement, {
+                    temp: fullDayEmergencyData.temperatures[currentHour] || emergencyData.temperatures[0],
+                    humidity: fullDayEmergencyData.humidity[currentHour] || emergencyData.humidity[0],
+                    precipitation: fullDayEmergencyData.precipitation[currentHour] || emergencyData.precipitation[0]
+                });
+                
+                renderWeatherChart(weatherCtx, emergencyData);
+                setupWeatherControls();
+                
+                // Generar recomendaciones incluso con datos de emergencia
+                generateEnergyRecommendations(emergencyData);
+                
+                weatherElement.innerHTML += "<br><div style='color: #e74c3c; font-size: 0.8em; text-align: center; margin-top: 5px;'>⚠️ Datos meteorológicos de emergencia</div>";
+            }
+        }
+
+        // Funciones de utilidad
+        function showLoading(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.opacity = '0.6';
+                element.style.pointerEvents = 'none';
+            }
+        }
+
+        function hideLoading(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.style.opacity = '1';
+                element.style.pointerEvents = 'auto';
+            }
+        }
+
+        // ===== FUNCIONALIDAD DEL MAPA =====
+
+        function initMap() {
+            // Configuración del mapa centrado en España
+            map = L.map('map').setView([currentLocation.lat, currentLocation.lon], 6);
+
+            // Capa de mapa
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 18
+            }).addTo(map);
+
+            // Límites de España (aproximados)
+            const spainBounds = [
+                [35.0, -10.0], // Suroeste (incluye Canarias)
+                [44.0, 5.0]    // Noreste
+            ];
+            
+            // Rectángulo para mostrar el área de cobertura
+            const spainRectangle = L.rectangle(spainBounds, {
+                color: '#3498db',
+                weight: 2,
+                fillOpacity: 0.1
+            }).addTo(map);
+
+            // Marcador inicial en la ubicación actual
+            updateMapMarker();
+
+            // Event listener para DOBLE CLICKS en el mapa
+            map.on('dblclick', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+                
+                // Verificar si está dentro de España
+                if (lat >= 35.0 && lat <= 44.0 && lng >= -10.0 && lng <= 5.0) {
+                    console.log(`🖱️ Doble click detectado en: ${lat}, ${lng}`);
+                    updateLocationFromCoordinates(lat, lng);
+                } else {
+                    alert('⚠️ Por favor, selecciona una ubicación dentro del territorio español.');
+                }
+            });
+            
+            // Mostrar tooltip informativo
+            const infoControl = L.control({position: 'topright'});
+            infoControl.onAdd = function(map) {
+                const div = L.DomUtil.create('div', 'leaflet-control-custom');
+                div.innerHTML = '<div style="background: rgba(255,255,255,0.9); padding: 8px; border-radius: 5px; border: 1px solid #ccc; font-size: 12px;"><strong>💡 Tip:</strong><br>Doble click en cualquier punto<br>del mapa para cambiar<br>la ubicación meteorológica</div>';
+                return div;
+            };
+            infoControl.addTo(map);
+        }
+
+        function updateMapMarker() {
+            if (currentMarker) {
+                map.removeLayer(currentMarker);
+            }
+
+            // Crear marcador con popup informativo
+            currentMarker = L.marker([currentLocation.lat, currentLocation.lon])
+                .addTo(map)
+                .bindPopup(`
+                    <div style="text-align: center;">
+                        <strong>📍 ${currentLocation.name}</strong><br>
+                        <small>Lat: ${currentLocation.lat.toFixed(4)}, Lon: ${currentLocation.lon.toFixed(4)}</small><br>
+                        <small>${currentLocation.detected ? '🎯 Ubicación detectada' : '🖱️ Ubicación seleccionada'}</small>
+                    </div>
+                `);
+
+            map.setView([currentLocation.lat, currentLocation.lon], 8);
+            
+            // Actualizar status en la interfaz
+            updateLocationStatus();
+        }
+
+        async function updateLocationFromCoordinates(lat, lon) {
+            // Mostrar loading
+            updateLocationStatus('🔄 Obteniendo información de la ubicación...');
+            
+            try {
+                // Obtener nombre de la ciudad
+                const cityName = await getCityName(lat, lon);
+                
+                currentLocation = {
+                    name: cityName,
+                    lat: lat,
+                    lon: lon,
+                    country: 'España',
+                    detected: false
+                };
+
+                updateMapMarker();
+                
+                // Recargar datos meteorológicos para la nueva ubicación
+                console.log(`🌤️ Cargando datos meteorológicos para ${cityName}...`);
+                await loadWeatherData();
+                
+            } catch (error) {
+                console.error('Error actualizando ubicación:', error);
+                updateLocationStatus('❌ Error obteniendo información de la ubicación');
+            }
+        }
+        
+        // Función para actualizar el status de ubicación en la interfaz
+        function updateLocationStatus(message = null) {
+            const statusElement = document.getElementById('location-status');
+            if (statusElement) {
+                if (message) {
+                    statusElement.textContent = message;
+                } else {
+                    const icon = currentLocation.detected ? '🎯' : '🖱️';
+                    const method = currentLocation.detected ? 'Detectada automáticamente' : 'Seleccionada manualmente';
+                    statusElement.innerHTML = `${icon} <strong>${currentLocation.name}</strong> - ${method}`;
+                }
+            }
+        }
+
+        // Generar recomendaciones para todo el día
+        function generateDailyRecommendations(analysis) {
+            const consejosContainer = document.getElementById('consejos-dia');
+            if (!consejosContainer) return;
+
+            const recommendations = [];
+            
+            // Recomendaciones de calefacción/refrigeración
+            if (analysis.daily.avgTemp < 16) {
+                recommendations.push({
+                    type: 'calefaccion',
+                    icon: '🔥',
+                    title: 'Optimización de Calefacción',
+                    description: `Temperatura media de ${analysis.daily.avgTemp.toFixed(1)}°C. Programa calefacción a 19-21°C, usa ropa de abrigo en casa y aprovecha la radiación solar cerrando cortinas por la noche.`
+                });
+            } else if (analysis.daily.avgTemp > 26) {
+                recommendations.push({
+                    type: 'refrigeracion',
+                    icon: '❄️',
+                    title: 'Refrigeración Eficiente',
+                    description: `Temperatura media de ${analysis.daily.avgTemp.toFixed(1)}°C. Usa aire acondicionado a 24-26°C, cierra persianas durante el día y aprovecha corrientes de aire nocturnas.`
+                });
+            } else {
+                recommendations.push({
+                    type: 'general',
+                    icon: '🌿',
+                    title: 'Ventilación Natural',
+                    description: `Temperatura ideal de ${analysis.daily.avgTemp.toFixed(1)}°C. Perfecto para ventilar naturalmente, abrir ventanas estratégicamente y minimizar sistemas HVAC.`
+                });
+            }
+            
+            // Recomendaciones de humedad
+            if (analysis.conditions.highHumidity) {
+                recommendations.push({
+                    type: 'ventilacion',
+                    icon: '💨',
+                    title: 'Control de Humedad',
+                    description: `Humedad alta del ${analysis.current.humidity}%. Usa extractores en baño y cocina, evita secar ropa en interior y considera un deshumidificador en horas pico.`
+                });
+            } else if (analysis.conditions.lowHumidity) {
+                recommendations.push({
+                    type: 'ventilacion',
+                    icon: '💧',
+                    title: 'Humidificación Natural',
+                    description: `Humedad baja del ${analysis.current.humidity}%. Coloca recipientes con agua, plantas húmedas o toallas mojadas para aumentar humedad sin gastar energía.`
+                });
+            }
+            
+            // Recomendaciones de iluminación según precipitación
+            if (analysis.conditions.rainExpected) {
+                recommendations.push({
+                    type: 'iluminacion',
+                    icon: '💡',
+                    title: 'Iluminación en Día Nublado',
+                    description: 'Se espera lluvia. Usa luces LED en áreas de trabajo, aprovecha luz natural cerca de ventanas y considera luces cálidas para ambientar sin sobreconsumo.'
+                });
+            } else {
+                recommendations.push({
+                    type: 'iluminacion',
+                    icon: '☀️',
+                    title: 'Aprovechamiento Solar',
+                    description: 'Día despejado. Maximiza luz natural, abre cortinas y persianas, apaga luces innecesarias y considera cargar dispositivos con energía solar si tienes paneles.'
+                });
+            }
+            
+            // Recomendación especial según tendencia
+            if (analysis.trends.tempTrend === 'rising') {
+                recommendations.push({
+                    type: 'general',
+                    icon: '📈',
+                    title: 'Preparación para Calor',
+                    description: 'Temperatura en aumento. Pre-enfría la casa en horas frescas, cierra ventanas antes del mediodía y prepara sistemas de refrigeración para más tarde.'
+                });
+            } else if (analysis.trends.tempTrend === 'falling') {
+                recommendations.push({
+                    type: 'general',
+                    icon: '📉',
+                    title: 'Preparación para Frío',
+                    description: 'Temperatura en descenso. Aprovecha calor residual, programa calefacción gradual y considera cerrar habitaciones no utilizadas para concentrar calor.'
+                });
+            }
+
+            // Renderizar recomendaciones
+            consejosContainer.innerHTML = recommendations.map(rec => `
+                <div class="consejo ${rec.type}">
+                    <div class="consejo-titulo">
+                        <span style="font-size: 1.2em;">${rec.icon}</span>
+                        ${rec.title}
+                    </div>
+                    <div class="consejo-descripcion">${rec.description}</div>
+                </div>
+            `).join('');
+        }
+
+        // Generar recomendaciones por franjas horarias
+        function generateHourlyRecommendations(fullDayData, currentHour) {
+            const horasContainer = document.getElementById('consejos-horas');
+            if (!horasContainer) return;
+
+            const hourlyTips = [];
+            const temps = fullDayData.temperatures;
+            
+            // Dividir el día en franjas de 6 horas
+            const franjas = [
+                { start: 0, end: 6, name: 'Madrugada (00-06h)', icon: '🌙' },
+                { start: 6, end: 12, name: 'Mañana (06-12h)', icon: '🌅' },
+                { start: 12, end: 18, name: 'Tarde (12-18h)', icon: '☀️' },
+                { start: 18, end: 24, name: 'Noche (18-24h)', icon: '🌆' }
+            ];
+            
+            franjas.forEach(franja => {
+                const franjaTemps = temps.slice(franja.start, franja.end).filter(t => t !== undefined);
+                if (franjaTemps.length === 0) return;
+                
+                const avgTemp = franjaTemps.reduce((sum, t) => sum + t, 0) / franjaTemps.length;
+                const minTemp = Math.min(...franjaTemps);
+                const maxTemp = Math.max(...franjaTemps);
+                
+                let consejo = '';
+                let ahorro = '';
+                
+                // Generar consejo específico para la franja
+                if (franja.start === 0) { // Madrugada
+                    if (avgTemp < 12) {
+                        consejo = 'Temperatura baja. Reduce calefacción gradualmente, usa mantas adicionales y programa termostato inteligente.';
+                        ahorro = 'Ahorro: 15-25%';
+                    } else if (avgTemp > 25) {
+                        consejo = 'Noche cálida. Aprovecha para ventilar, usa ventiladores en lugar de A/C si es posible.';
+                        ahorro = 'Ahorro: 20-30%';
+                    } else {
+                        consejo = 'Temperatura ideal para descanso. Mantén sistemas en modo eco o apagados.';
+                        ahorro = 'Ahorro: 30-40%';
+                    }
+                } else if (franja.start === 6) { // Mañana
+                    if (avgTemp < 15) {
+                        consejo = 'Mañana fresca. Programa calefacción 30min antes de levantarte, usa radiación solar abriendo cortinas.';
+                        ahorro = 'Ahorro: 10-20%';
+                    } else {
+                        consejo = 'Mañana templada. Ventila para renovar aire, aprovecha luz natural y evita calefacción.';
+                        ahorro = 'Ahorro: 25-35%';
+                    }
+                } else if (franja.start === 12) { // Tarde
+                    if (avgTemp > 28) {
+                        consejo = 'Tarde calurosa. Pre-enfría antes del pico de calor, cierra persianas, usa A/C eficientemente.';
+                        ahorro = 'Ahorro: 15-25%';
+                    } else if (avgTemp < 18) {
+                        consejo = 'Tarde fresca. Aprovecha sol directo, abre cortinas al sur, programa calefacción gradual.';
+                        ahorro = 'Ahorro: 20-30%';
+                    } else {
+                        consejo = 'Tarde perfecta. Ventilación natural, sistemas HVAC al mínimo o apagados.';
+                        ahorro = 'Ahorro: 35-45%';
+                    }
+                } else { // Noche
+                    if (avgTemp > 22) {
+                        consejo = 'Noche cálida. Ventila cuando baje el sol, usa ventiladores, programa A/C en modo nocturno.';
+                        ahorro = 'Ahorro: 20-30%';
+                    } else if (avgTemp < 16) {
+                        consejo = 'Noche fresca. Programa calefacción por temporizador, usa ropa de cama adicional.';
+                        ahorro = 'Ahorro: 15-25%';
+                    } else {
+                        consejo = 'Noche agradable. Ideal para sistemas en standby, ventilación natural ligera.';
+                        ahorro = 'Ahorro: 30-40%';
+                    }
+                }
+                
+                // Marcar franja actual
+                const isCurrent = currentHour >= franja.start && currentHour < franja.end;
+                
+                hourlyTips.push({
+                    franja: franja.name,
+                    icon: franja.icon,
+                    temp: `${minTemp}°-${maxTemp}°C`,
+                    consejo,
+                    ahorro,
+                    isCurrent
+                });
+            });
+
+            // Renderizar franjas horarias
+            horasContainer.innerHTML = hourlyTips.map(tip => `
+                <div class="franja-horaria ${tip.isCurrent ? 'current-franja' : ''}" style="${tip.isCurrent ? 'border-left: 4px solid #e74c3c; background: linear-gradient(135deg, #fff5f5, #ffe6e6);' : ''}">
+                    <div class="franja-hora">
+                        ${tip.icon} ${tip.franja.split('(')[0]}
+                        ${tip.isCurrent ? '<br><small style="color: #e74c3c; font-weight: normal;">🔴 Actual</small>' : ''}
+                    </div>
+                    <div class="franja-consejo">
+                        <strong>Temp: ${tip.temp}</strong><br>
+                        ${tip.consejo}
+                    </div>
+                    <div class="franja-ahorro">${tip.ahorro}</div>
+                </div>
+            `).join('');
+        }
+
+        async function buscarCiudad() {
+            const ciudad = document.getElementById('ciudad').value.trim();
+            if (!ciudad) {
+                alert('Por favor, introduce el nombre de una ciudad.');
+                return;
+            }
+
+            try {
+                showLoading('map');
+                
+                // Usar Nominatim (OpenStreetMap) para geocodificación
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(ciudad)},España&limit=1&countrycodes=es`);
+                const data = await response.json();
+
+                if (data.length > 0) {
+                    const location = data[0];
+                    currentLocation = {
+                        name: location.display_name.split(',')[0],
+                        lat: parseFloat(location.lat),
+                        lon: parseFloat(location.lon),
+                        country: 'España',
+                        detected: false
+                    };
+
+                    updateMapMarker();
+                    loadWeatherData(); // Recargar datos meteorológicos
+                    
+                    alert(`Ubicación encontrada: ${currentLocation.name}`);
+                } else {
+                    alert('No se encontró la ciudad. Intenta con otro nombre.');
+                }
+            } catch (error) {
+                console.error('Error al buscar ciudad:', error);
+                alert('Error al buscar la ciudad. Inténtalo de nuevo.');
+            } finally {
+                hideLoading('map');
+            }
+        }
+
+        // Inicialización cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🌤️ Iniciando página meteorológica...');
+            
+            // Agregar event listener para Enter en el campo de búsqueda
+            const ciudadInput = document.getElementById('ciudad');
+            if (ciudadInput) {
+                ciudadInput.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault(); // Prevenir el comportamiento por defecto
+                        buscarCiudad();
+                    }
+                });
+                
+                // También agregar event listener para 'keypress' como respaldo
+                ciudadInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        buscarCiudad();
+                    }
+                });
+            }
+            
+            initMap();
+            loadWeatherData().then(() => {
+                // Actualizar el marcador del mapa después de cargar los datos (por si se detectó una nueva ubicación)
+                updateMapMarker();
+            });
+        });
+    </script>
+</body>
+</html>
