@@ -649,62 +649,93 @@
       scroll-behavior: smooth;
     }
 
-    /* ===== RESPONSIVE DESIGN ===== */
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-      }
 
+    /* ===== RESPONSIVE DESIGN ===== */
+    @media (max-width: 900px) {
+      .container {
+        padding: 10px;
+      }
       .grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+        gap: 18px;
       }
-
       .card {
-        padding: 20px;
+        padding: 16px;
       }
-
       .chart-container {
-        height: 300px;
+        height: 250px;
       }
-
-      .chart-controls {
-        padding: 12px;
-        gap: 8px;
-      }
-
-      .chart-controls label {
-        padding: 6px 12px;
-        font-size: 0.85rem;
-      }
-
       .controls {
         flex-direction: column;
-        gap: 15px;
+        gap: 12px;
       }
-
       input[type="text"], input[type="number"] {
         width: 100%;
-        max-width: 300px;
+        max-width: 260px;
       }
-
       #map {
-        height: 350px;
+        height: 250px;
+      }
+      /* Calculadora de electrodomésticos */
+      #calculadora-ahorro > div[style*="display: grid"] {
+        grid-template-columns: 1fr;
+        gap: 15px !important;
+      }
+      #calculadora-ahorro .card, #calculadora-ahorro {
+        padding: 10px !important;
+      }
+      #calculadora-ahorro .info-box {
+        text-align: center;
+      }
+      #calculadora-ahorro > div[style*="display: grid"] > div {
+        min-width: 0 !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+      }
+      #calculadora-ahorro select, #calculadora-ahorro input[type="number"], #calculadora-ahorro input[type="text"] {
+        font-size: 1rem;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+      }
+      #calculadora-ahorro button {
+        width: 100%;
+        font-size: 1rem;
+      }
+      /* Centrado de cuadros informativos */
+      .info-box, .tips-box {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+      }
+      .info-banner, .disclaimer, .footer {
+        margin-left: auto;
+        margin-right: auto;
       }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
       h1 {
-        font-size: 1.8rem;
-        margin: 20px 0;
+        font-size: 1.3rem;
+        margin: 14px 0;
       }
-
       .card {
-        padding: 15px;
+        padding: 8px;
       }
-
       .chart-container {
-        height: 250px;
+        height: 160px;
+      }
+      #calculadora-ahorro .info-box {
+        font-size: 0.92rem;
+        padding: 8px;
+      }
+      .info-box, .tips-box {
+        font-size: 0.92rem;
+        padding: 8px;
+      }
+      .features-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
       }
     }
 
