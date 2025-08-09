@@ -689,10 +689,39 @@
         gap: 15px !important;
       }
       
+      /* Secciones internas de la calculadora en móviles */
+      #calculadora-ahorro div[style*="background: linear-gradient(135deg, #9b59b6, #8e44ad)"] {
+        padding: 15px !important;
+        margin-bottom: 10px !important;
+      }
+      
+      #calculadora-ahorro div[style*="background: linear-gradient(135deg, #3498db, #2980b9)"] {
+        padding: 15px !important;
+        margin-bottom: 10px !important;
+      }
+      
+      #calculadora-ahorro div[style*="background: linear-gradient(135deg, #e74c3c, #c0392b)"] {
+        padding: 15px !important;
+        margin-bottom: 0 !important;
+      }
+      
       /* Contenedores internos */
       #calculadora-ahorro div[style*="grid-template-columns"] {
         grid-template-columns: 1fr !important;
-        gap: 15px !important;
+        gap: 12px !important;
+      }
+      
+      /* Grids internos específicos para formularios */
+      #calculadora-ahorro div[style*="repeat(auto-fit, minmax(200px, 1fr))"] {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 12px !important;
+      }
+      
+      /* Grids para hora y duración */
+      #calculadora-ahorro div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
       }
       
       /* Inputs y selects */
@@ -749,9 +778,17 @@
         padding: 8px !important;
       }
       
+      /* Secciones de colores en móviles pequeños */
+      #calculadora-ahorro div[style*="background: linear-gradient"] {
+        padding: 12px !important;
+        margin-bottom: 8px !important;
+        border-radius: 8px !important;
+      }
+      
       #calculadora-ahorro .info-box {
         font-size: 0.85rem;
         padding: 8px;
+        margin-bottom: 8px;
       }
       
       #calculadora-ahorro select, 
@@ -767,11 +804,11 @@
       
       /* Reducir espacios en móviles pequeños */
       #calculadora-ahorro > div[style*="grid-template-columns: 1fr 350px"] {
-        gap: 10px !important;
+        gap: 8px !important;
       }
       
       #calculadora-ahorro div[style*="grid-template-columns"] {
-        gap: 10px !important;
+        gap: 8px !important;
       }
       
       /* Textos más pequeños */
@@ -806,6 +843,13 @@
       #calculadora-ahorro {
         padding: 5px !important;
         margin: 5px 0 !important;
+      }
+      
+      /* Secciones de colores en móviles muy pequeños */
+      #calculadora-ahorro div[style*="background: linear-gradient"] {
+        padding: 8px !important;
+        margin-bottom: 6px !important;
+        border-radius: 6px !important;
       }
       
       #calculadora-ahorro h3 {
@@ -847,7 +891,14 @@
       #calculadora-ahorro div[style*="grid"] {
         display: flex !important;
         flex-direction: column !important;
-        gap: 8px !important;
+        gap: 6px !important;
+      }
+      
+      /* Excepto para hora:minutos que puede quedarse horizontal */
+      #calculadora-ahorro div[style*="grid-template-columns: 1fr 1fr"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 4px !important;
       }
     }
 
