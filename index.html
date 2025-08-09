@@ -1250,6 +1250,8 @@
               <option value="business">� Comercial (horario laboral)</option>
               <option value="work-day">💼 Día laboral (mañana y noche)</option>
             </select>
+            
+</body>
           </div>
         </div>
         <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; font-size: 0.9rem;">
@@ -1272,23 +1274,28 @@
               background: white;
               color: #2c3e50;
             " onchange="updateUserTariffSelector()">
-              <option value="">-- Selecciona tu compañía --</option>
-              <option value="iberdrola-cor">🏛️ Iberdrola COR (Tarifa regulada)</option>
-              <option value="endesa-cor">🏛️ Endesa Energía XXI (Tarifa regulada)</option>
-              <option value="naturgy-cor">🏛️ Naturgy Iberia (Tarifa regulada)</option>
-              <option value="edp-cor">🏛️ EDP Comercial. Últ. Recurso</option>
-              <option value="repsol-cor">🏛️ Repsol Comercial. Últ. Recurso</option>
-              <option value="iberdrola">🟦 Iberdrola (Mercado libre)</option>
-              <option value="endesa">🔵 Endesa (Mercado libre)</option>
-              <option value="naturgy">🟢 Naturgy (Mercado libre)</option>
-              <option value="repsol">🟡 Repsol (Mercado libre)</option>
+              <option value="">Selecciona tu comercializadora como aparece en tu factura...</option>
+              <option value="iberdrola-cor">🏛️ Iberdrola Comercialización de Último Recurso</option>
+              <option value="endesa-cor">🏛️ Endesa Energía XXI</option>
+              <option value="naturgy-cor">🏛️ Naturgy Iberia</option>
+              <option value="edp-cor">🏛️ EDP Comercial Último Recurso</option>
+              <option value="repsol-cor">🏛️ Repsol Comercial Último Recurso</option>
+              <option value="curenergia-cor">🏛️ Curenergia (COR)</option>
+              <option value="iberdrola">🟦 Iberdrola Clientes</option>
+              <option value="endesa">🔵 Endesa Energía</option>
+              <option value="naturgy">🟢 Naturgy</option>
+              <option value="repsol">🟡 Repsol</option>
               <option value="totalenergies">🟣 TotalEnergies</option>
               <option value="holaluz">☀️ Holaluz</option>
-              <option value="asenergy">⚡ Asenergy</option>
-              <option value="edp">🔷 EDP (Mercado libre)</option>
+              <option value="edp">⚡ EDP Energía</option>
+              <option value="asenergy">🔋 Asenergy</option>
               <option value="factorenergia">📊 Factor Energía</option>
-              <option value="lucera">💡 Lucera</option>
+              <option value="lucera">💡 Lucera Energía</option>
               <option value="somenergia">🌱 Som Energia</option>
+              <option value="octopus">🐙 Octopus Energy</option>
+              <option value="nexus">🔌 Nexus Energía</option>
+              <option value="gana">💰 Gana Energía</option>
+              <option value="pepeenergy">🌟 Pepe Energy</option>
             </select>
           </div>
           <div>
@@ -1314,6 +1321,17 @@
         <div style="text-align: center; padding: 40px; color: #7f8c8d;">
           <span style="font-size: 3rem;">⬆️</span>
           <p>Selecciona tu tarifa actual para ver la comparación</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comparación de Tarifas por Compañías -->
+    <div class="card full-width" id="tariff-comparison-section" style="display: none;">
+      <h3>📊 Comparación Detallada de Tarifas</h3>
+      <div id="company-comparison-chart">
+        <div style="text-align: center; padding: 40px; color: #7f8c8d;">
+          <span style="font-size: 3rem;">📊</span>
+          <p>Comparación de tarifas se mostrará aquí</p>
         </div>
       </div>
     </div>
@@ -1403,293 +1421,180 @@
       </div>
     </div>
 
-    <div class="grid">
-      <!-- Hourly Tariff Comparison Calculator -->
-      <div class="card" id="calculadora-ahorro">
-        <h3>💰 Calculadora de Costo Real por Electrodoméstico - ¿Cuánto Pagas HOY?</h3>
-        <div class="info-box">
-          <p><strong>🎯 Función:</strong> Calcula el costo exacto en euros y céntimos por usar un electrodoméstico específico en un horario concreto de HOY.</p>
-          <p><strong>� Resultado:</strong> Costo real de tu consumo con recomendaciones de mejores horarios para ahorrar dinero.</p>
-          <p><strong>💡 Utilidad:</strong> Descubre cuánto pagas realmente y optimiza tus horarios de consumo para reducir tu factura.</p>
-        </div>
+  <!-- ====== CALCULADORA DE COSTO REAL POR ELECTRODOMÉSTICO ====== -->
+  <section style="background: linear-gradient(135deg, #6c5ce7, #a29bfe); padding: 40px 20px; margin: 40px 0;">
+    <div class="container" style="max-width: 1200px; margin: 0 auto;">
+      
+      <h2 style="text-align: center; color: white; font-size: 2.5rem; margin-bottom: 40px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+        ⚡ Calculadora de Costo Real por Electrodoméstico
+      </h2>
+
+      <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; align-items: start;">
         
-        <!-- Configuración del electrodoméstico y horario -->
-        <div style="display: grid; grid-template-columns: 1fr 350px; gap: 20px; margin-bottom: 20px;">
-          <!-- Columna izquierda: Configuración -->
-          <div style="background: linear-gradient(135deg, #9b59b6, #8e44ad); color: white; padding: 25px; border-radius: 12px;">
-            <h4 style="margin: 0 0 20px 0;">⚡ Configura tu Electrodoméstico y Horario</h4>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
-              <!-- Electrodoméstico -->
-              <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Electrodoméstico:</label>
-                <select id="appliance-selector" style="
-                  width: 100%;
-                  padding: 12px;
-                  border: none;
-                  border-radius: 8px;
-                  font-size: 1rem;
-                  background: white;
-                  color: #2c3e50;
-                " onchange="updateApplianceConsumption(); autoRecalculate()">
-                  <option value="">-- Selecciona electrodoméstico --</option>
-                  <option value="lavadora" data-consumption="2.0">🧺 Lavadora (2.0 kWh/ciclo)</option>
-                  <option value="lavavajillas" data-consumption="1.5">🍽️ Lavavajillas (1.5 kWh/ciclo)</option>
-                  <option value="secadora" data-consumption="4.0">👕 Secadora (4.0 kWh/ciclo)</option>
-                  <option value="horno" data-consumption="2.5">🍞 Horno (2.5 kWh/hora)</option>
-                  <option value="aire-acondicionado" data-consumption="2.0">❄️ Aire acondicionado (2.0 kWh/hora)</option>
-                  <option value="calefaccion" data-consumption="3.0">🔥 Calefacción eléctrica (3.0 kWh/hora)</option>
-                  <option value="coche-electrico" data-consumption="25.0">🚗 Carga coche eléctrico (25.0 kWh)</option>
-                  <option value="bomba-calor" data-consumption="3.5">♨️ Bomba de calor (3.5 kWh/hora)</option>
-                  <option value="personalizado" data-consumption="0">🔧 Personalizado</option>
-                </select>
-              </div>
-              
-              <!-- Consumo -->
-              <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Consumo (kWh):</label>
-                <input type="number" id="appliance-consumption" value="2.0" min="0.1" max="100" step="0.1" placeholder="Introduce el consumo en kWh" style="
-                  width: 100%;
-                  padding: 12px;
-                  border: none;
-                  border-radius: 8px;
-                  font-size: 1rem;
-                  background: white;
-                  color: #2c3e50;
-                " onchange="handleConsumptionChange(); autoRecalculate()" oninput="validateCustomConsumption()" onkeypress="handleEnterKey(event)">
-                <small style="opacity: 0.9;">kWh del electrodoméstico (editable para valores personalizados)</small>
-              </div>
-            </div>
-            
-            <!-- Selector de Compañía y Tarifa -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
-              <!-- Compañía -->
-              <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">🏢 Tu Compañía:</label>
-                <select id="hourly-company-selector" style="
-                  width: 100%;
-                  padding: 12px;
-                  border: none;
-                  border-radius: 8px;
-                  font-size: 1rem;
-                  background: white;
-                  color: #2c3e50;
-                " onchange="updateHourlyTariff(); autoRecalculate()">
-                  <option value="pvpc">PVPC (Tarifa regulada)</option>
-                  <option value="iberdrola-cor">🏛️ Iberdrola Comercialización de Último Recurso</option>
-                  <option value="endesa-cor">🏛️ Endesa Energía XXI</option>
-                  <option value="naturgy-cor">🏛️ Naturgy Iberia</option>
-                  <option value="edp-cor">🏛️ EDP Comercial Último Recurso</option>
-                  <option value="repsol-cor">🏛️ Repsol Comercial Último Recurso</option>
-                  <option value="curenergia-cor">🏛️ Curenergia (COR)</option>
-                  <option value="iberdrola">🟦 Iberdrola Clientes</option>
-                  <option value="endesa">🔵 Endesa Energía</option>
-                  <option value="naturgy">🟢 Naturgy</option>
-                  <option value="repsol">🟡 Repsol</option>
-                  <option value="totalenergies">🟣 TotalEnergies</option>
-                  <option value="holaluz">☀️ Holaluz</option>
-                  <option value="edp">⚡ EDP Energía</option>
-                  <option value="asenergy">🔋 Asenergy</option>
-                  <option value="factorenergia">📊 Factor Energía</option>
-                  <option value="lucera">💡 Lucera Energía</option>
-                  <option value="somenergia">🌱 Som Energia</option>
-                  <option value="octopus">🐙 Octopus Energy</option>
-                  <option value="nexus">🔌 Nexus Energía</option>
-                  <option value="gana">💰 Gana Energía</option>
-                  <option value="pepeenergy">🌟 Pepe Energy</option>
-                </select>
-              </div>
-              
-              <!-- Tarifa -->
-              <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">📊 Tu Tarifa:</label>
-                <select id="hourly-tariff-selector" style="
-                  width: 100%;
-                  padding: 12px;
-                  border: none;
-                  border-radius: 8px;
-                  font-size: 1rem;
-                  background: white;
-                  color: #2c3e50;
-                " onchange="updateHourlyTariff(); autoRecalculate()">
-                  <option value="2.0A">PVPC 2.0A (Sin discriminación)</option>
-                  <option value="2.0DHA">PVPC 2.0DHA (Discriminación horaria)</option>
-                  <option value="2.0DHS">PVPC 2.0DHS (Supervalle)</option>
-                </select>
-              </div>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
-              <!-- Hora y minutos de inicio -->
-              <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">⏰ Hora de inicio:</label>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                  <select id="start-hour" style="
-                    width: 100%;
-                    padding: 10px;
-                    border: none;
-                    border-radius: 6px;
-                    font-size: 0.95rem;
-                    background: white;
-                    color: #2c3e50;
-                  " onchange="calculateDuration(); autoRecalculate()">
-                    <option value="0">00</option>
-                    <option value="1">01</option>
-                    <option value="2">02</option>
-                    <option value="3">03</option>
-                    <option value="4">04</option>
-                    <option value="5">05</option>
-                    <option value="6">06</option>
-                    <option value="7">07</option>
-                    <option value="8">08</option>
-                    <option value="9">09</option>
-                    <option value="10" selected>10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                  </select>
-                  <select id="start-minute" style="
-                    width: 100%;
-                    padding: 10px;
-                    border: none;
-                    border-radius: 6px;
-                    font-size: 0.95rem;
-                    background: white;
-                    color: #2c3e50;
-                  " onchange="calculateDuration(); autoRecalculate()">
-                    <option value="0" selected>00</option>
-                  </select>
-                </div>
-                <small style="opacity: 0.8; font-size: 0.8rem;">Hora : Minutos</small>
-              </div>
-              
-              <!-- Hora y minutos de finalización -->
-              <div>
-                <label style="display: block; margin-bottom: 8px; font-weight: 600;">🏁 Hora de finalización:</label>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                  <select id="end-hour" style="
-                    width: 100%;
-                    padding: 10px;
-                    border: none;
-                    border-radius: 6px;
-                    font-size: 0.95rem;
-                    background: white;
-                    color: #2c3e50;
-                  " onchange="calculateDuration(); autoRecalculate()">
-                    <option value="0">00</option>
-                    <option value="1">01</option>
-                    <option value="2">02</option>
-                    <option value="3">03</option>
-                    <option value="4">04</option>
-                    <option value="5">05</option>
-                    <option value="6">06</option>
-                    <option value="7">07</option>
-                    <option value="8">08</option>
-                    <option value="9">09</option>
-                    <option value="10">10</option>
-                    <option value="11" selected>11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
-                    <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                  </select>
-                  <select id="end-minute" style="
-                    width: 100%;
-                    padding: 10px;
-                    border: none;
-                    border-radius: 6px;
-                    font-size: 0.95rem;
-                    background: white;
-                    color: #2c3e50;
-                  " onchange="calculateDuration(); autoRecalculate()">
-                    <option value="0" selected>00</option>
-                  </select>
-                </div>
-                <small style="opacity: 0.8; font-size: 0.8rem;">Hora : Minutos</small>
-              </div>
-            </div>
-          </div>
+        <!-- Panel de Configuración -->
+        <div style="background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; border: 1px solid rgba(255,255,255,0.2);">
           
-          <!-- Columna derecha: Resumen y acción -->
-          <div style="display: flex; flex-direction: column; gap: 15px;">
-            <!-- Panel de resumen -->
-            <div style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 20px; border-radius: 12px; flex: 1;">
-              <h4 style="margin: 0 0 15px 0;">📋 Resumen</h4>
-              
-              <!-- Duración calculada -->
-              <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 0.9rem;">⏱️ Duración:</label>
-                <input type="text" id="duration-display" readonly style="
-                  width: 100%;
-                  padding: 10px;
-                  border: none;
-                  border-radius: 6px;
-                  font-size: 1rem;
-                  background: rgba(255,255,255,0.8);
-                  color: #2c3e50;
-                  text-align: center;
-                  font-weight: bold;
-                " value="1 hora">
-              </div>
-              
-              <!-- Información adicional -->
-              <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; font-size: 0.85rem;">
-                💡 <strong>Tip:</strong> Selecciona tu compañía y tarifa actual para conocer el costo exacto de usar electrodomésticos en horarios específicos.
-              </div>
-            </div>
+          <h3 style="color: white; font-size: 1.8rem; margin-bottom: 25px; display: flex; align-items: center; gap: 10px;">
+            ⚙️ Configura tu Electrodoméstico y Horario
+          </h3>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
             
-            <!-- Botón de acción -->
-            <div style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 20px; border-radius: 12px; text-align: center;">
-              <button onclick="calculateTimingAndComparison(); markAsCalculated()" style="
-                background: rgba(255,255,255,0.2);
-                color: white;
-                border: 2px solid white;
-                padding: 15px 25px;
-                border-radius: 25px;
-                cursor: pointer;
-                font-size: 1.1rem;
-                font-weight: 700;
-                width: 100%;
-                transition: all 0.3s ease;
-              " onmouseover="this.style.background='white'; this.style.color='#e74c3c'" 
-                 onmouseout="this.style.background='rgba(255,255,255,0.2)'; this.style.color='white'">
-                💰 CALCULAR COSTO REAL
-              </button>
-              <div style="margin-top: 10px; font-size: 0.8rem; opacity: 0.9;">
-                Descubre cuánto pagas con tu tarifa actual
+            <div>
+              <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">Electrodoméstico:</label>
+              <select id="new-calc-appliance" style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 1rem;">
+                <option value="1.5">🧺 Lavavajillas (1.5 kWh/ciclo)</option>
+                <option value="2.0">👕 Lavadora (2.0 kWh/ciclo)</option>
+                <option value="3.5">🔥 Secadora (3.5 kWh/ciclo)</option>
+                <option value="2.5">🍽️ Lavavajillas industrial (2.5 kWh/ciclo)</option>
+                <option value="1.2">🏠 Aire acondicionado/hora (1.2 kWh/h)</option>
+                <option value="2.8">🔥 Horno eléctrico/hora (2.8 kWh/h)</option>
+                <option value="0.8">💡 Iluminación LED/hora (0.8 kWh/h)</option>
+                <option value="1.0">📺 TV + dispositivos/hora (1.0 kWh/h)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">Consumo (kWh):</label>
+              <input type="number" id="new-calc-consumption" value="1.5" step="0.1" min="0.1" max="10" 
+                     style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 1rem;">
+              <small style="color: rgba(255,255,255,0.8); font-size: 0.85rem;">kWh del electrodoméstico</small>
+            </div>
+
+            <div>
+              <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">🏢 Tu Compañía:</label>
+              <select id="new-calc-company" style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 1rem;">
+                <option value="">Selecciona tu comercializadora como aparece en tu factura...</option>
+                <option value="iberdrola-cor">🏛️ Iberdrola Comercialización de Último Recurso</option>
+                <option value="endesa-cor">🏛️ Endesa Energía XXI</option>
+                <option value="naturgy-cor">🏛️ Naturgy Iberia</option>
+                <option value="edp-cor">🏛️ EDP Comercial Último Recurso</option>
+                <option value="repsol-cor">🏛️ Repsol Comercial Último Recurso</option>
+                <option value="curenergia-cor">🏛️ Curenergia (COR)</option>
+                <option value="iberdrola">🟦 Iberdrola Clientes</option>
+                <option value="endesa">🔵 Endesa Energía</option>
+                <option value="naturgy">🟢 Naturgy</option>
+                <option value="repsol">🟡 Repsol</option>
+                <option value="totalenergies">🟣 TotalEnergies</option>
+                <option value="holaluz">☀️ Holaluz</option>
+                <option value="edp">⚡ EDP Energía</option>
+                <option value="asenergy">🔋 Asenergy</option>
+                <option value="factorenergia">📊 Factor Energía</option>
+                <option value="lucera">💡 Lucera Energía</option>
+                <option value="somenergia">🌱 Som Energia</option>
+                <option value="octopus">🐙 Octopus Energy</option>
+                <option value="nexus">🔌 Nexus Energía</option>
+                <option value="gana">💰 Gana Energía</option>
+                <option value="pepeenergy">🌟 Pepe Energy</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">📊 Tu Tarifa:</label>
+              <select id="new-calc-tariff" style="width: 100%; padding: 12px; border-radius: 10px; border: none; font-size: 1rem;">
+                <option value="">-- Selecciona tu tarifa --</option>
+                <option value="2.0A">PVPC 2.0A (Sin discriminación)</option>
+                <option value="2.0DHA">PVPC 2.0DHA (Con discriminación)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            
+            <div>
+              <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">🕐 Hora de inicio:</label>
+              <div style="display: flex; gap: 5px;">
+                <select id="new-calc-start-hour" style="flex: 1; padding: 10px; border-radius: 8px; border: none;">
+                  <option value="0">00</option><option value="1">01</option><option value="2">02</option><option value="3">03</option>
+                  <option value="4">04</option><option value="5">05</option><option value="6">06</option><option value="7">07</option>
+                  <option value="8">08</option><option value="9">09</option><option value="10">10</option><option value="11">11</option>
+                  <option value="12" selected>12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option>
+                  <option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option>
+                  <option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option>
+                </select>
+                <select id="new-calc-start-minute" style="flex: 1; padding: 10px; border-radius: 8px; border: none;">
+                  <option value="0" selected>00</option>
+                  <option value="15">15</option>
+                  <option value="30">30</option>
+                  <option value="45">45</option>
+                </select>
               </div>
+              <small style="color: rgba(255,255,255,0.8); font-size: 0.8rem;">Hora : Minutos</small>
+            </div>
+
+            <div>
+              <label style="color: white; font-weight: bold; display: block; margin-bottom: 8px;">⏱️ Duración funcionamiento:</label>
+              <div style="display: flex; gap: 5px;">
+                <select id="new-calc-duration-hours" style="flex: 1; padding: 10px; border-radius: 8px; border: none;">
+                  <option value="1" selected>1h</option>
+                  <option value="2">2h</option>
+                  <option value="3">3h</option>
+                  <option value="4">4h</option>
+                  <option value="5">5h</option>
+                  <option value="6">6h</option>
+                  <option value="8">8h</option>
+                  <option value="12">12h</option>
+                </select>
+                <select id="new-calc-duration-minutes" style="flex: 1; padding: 10px; border-radius: 8px; border: none;">
+                  <option value="0" selected>0m</option>
+                  <option value="15">15m</option>
+                  <option value="30">30m</option>
+                  <option value="45">45m</option>
+                </select>
+              </div>
+              <small style="color: rgba(255,255,255,0.8); font-size: 0.8rem;">Horas : Minutos</small>
             </div>
           </div>
         </div>
-        
-        <!-- Resultado de la comparación -->
-        <div id="hourly-comparison-result">
-          <div style="text-align: center; padding: 40px; color: #7f8c8d;">
-            <span style="font-size: 3rem;">⚡</span>
-            <p>Configura tu electrodoméstico y horario para ver la comparación de tarifas</p>
+
+        <!-- Panel de Resultados -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          
+          <!-- Resumen -->
+          <div style="background: linear-gradient(135deg, #00b894, #00cec9); border-radius: 15px; padding: 20px; color: white; text-align: center;">
+            <h3 style="margin: 0 0 15px 0;">📋 Resumen</h3>
+            
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+              <div style="font-size: 0.9rem; margin-bottom: 5px;">⏰ Finaliza a las:</div>
+              <div id="new-calc-end-time" style="font-size: 1.6rem; font-weight: bold;">13:00</div>
+            </div>
+            
+            <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px;">
+              <div style="font-size: 0.9rem; margin-bottom: 5px;">🔌 Duración:</div>
+              <div id="new-calc-duration-display" style="font-size: 1.6rem; font-weight: bold;">1 hora</div>
+            </div>
+
+            <div style="background: rgba(255,193,7,0.2); border-radius: 10px; padding: 15px; margin-top: 15px; border-left: 4px solid #ffc107;">
+              <div style="font-size: 0.9rem; display: flex; align-items: center; gap: 5px;">
+                💡 <strong>Tip:</strong>
+              </div>
+              <div style="font-size: 0.85rem; margin-top: 5px; line-height: 1.3;">
+                Selecciona tu compañía y tarifa actual para conocer el costo exacto de usar electrodomésticos en horarios específicos.
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de Cálculo -->
+          <div style="background: linear-gradient(135deg, #e17055, #d63031); border-radius: 15px; padding: 25px; text-align: center; cursor: pointer; transition: all 0.3s;" 
+               onclick="calculateNewApplianceCost()" 
+               onmouseover="this.style.transform='scale(1.02)'" 
+               onmouseout="this.style.transform='scale(1)'">
+            <div style="color: white; font-size: 1.5rem; font-weight: bold; margin-bottom: 8px;">
+              💰 CALCULAR COSTO REAL
+            </div>
+            <div style="color: rgba(255,255,255,0.9); font-size: 1rem;">
+              Descubre cuánto pagas con tu tarifa actual
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Resultados del Cálculo -->
+      <div id="new-calc-results" style="margin-top: 30px; display: none;">
+        <!-- Los resultados se mostrarán aquí -->
+      </div>
     </div>
-  </div>
+  </section>
 
   <!-- Disclaimer -->
   <div class="disclaimer">
@@ -1720,6 +1625,20 @@ let weatherChart = null;
 let priceChart = null;
 let comparisonChart = null;
 let map = null;
+
+// ===== FUNCIÓN DE PRUEBA =====
+function testCalculation() {
+  console.log('🚀 Función de prueba iniciada');
+  alert('¡El botón funciona! Ahora voy a intentar el cálculo real...');
+  
+  // Llamar a la función real
+  try {
+    calculatePreciseHourlyComparison();
+  } catch (error) {
+    console.error('❌ Error en calculatePreciseHourlyComparison:', error);
+    alert('Error: ' + error.message);
+  }
+}
 
 // ===== SISTEMA DE CACHÉ SIMPLIFICADO PARA GITHUB PAGES =====
 const CACHE_CONFIG = {
@@ -1867,7 +1786,7 @@ function forceLoadBackupPrices() {
       
       // Actualizar comparación de tarifas
       const comparisonData = calculateTariffComparison(backupData.prices, 'respaldo');
-      renderTariffComparison(comparisonData);
+      // renderTariffComparison(comparisonData); // COMENTADO - sección eliminada
       
       updateApiStatus('offline', 'Datos de respaldo cargados correctamente');
       console.log('✅ Precios de respaldo cargados exitosamente');
@@ -2122,118 +2041,13 @@ function calculateTariffComparison(pvpcPrices, dataSource = null) {
   };
 }
 
+/*
+// FUNCIÓN COMENTADA - Renderizar comparación de tarifas (sección eliminada por solicitud del usuario)
 function renderTariffComparison(comparisonData) {
-  const container = document.getElementById('company-comparison-chart');
-  if (!container) {
-    console.error('❌ No se encontró el contenedor company-comparison-chart');
-    return;
-  }
-  
-  if (!comparisonData) {
-    console.error('❌ No hay datos de comparación para renderizar');
-    container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #e74c3c;">
-        <span style="font-size: 3rem;">❌</span>
-        <p>Error: No se pudieron generar las comparaciones de tarifas</p>
-        <button onclick="forceUpdateComparison()" style="
-          background: #3498db; color: white; border: none; padding: 10px 20px; 
-          border-radius: 5px; cursor: pointer; margin-top: 10px;
-        ">🔄 Reintentar</button>
-      </div>
-    `;
-    return;
-  }
-  
-  console.log('📊 Renderizando comparación con datos:', comparisonData);
-  
-  // Almacenar datos para análisis personalizado
-  currentPricesData = {
-    pvpcPrice: comparisonData.pvpcCurrentPrice,
-    pvpcDailyAverage: comparisonData.pvpcAveragePrice,
-    comparisons: comparisonData.comparisons,
-    isOfficialData: comparisonData.isOfficialData,
-    hourlyPrices: globalPrices // Usar los precios globales
-  };
-  
-  const { pvpcAveragePrice, pvpcCurrentPrice, comparisons, bestOption, worstOption, isOfficialData, dataSource } = comparisonData;
-  
-  console.log('💰 Datos de renderizado:', {
-    pvpcCurrentPrice,
-    pvpcAveragePrice,
-    comparisonsCount: comparisons.length,
-    bestOption: bestOption ? `${bestOption.company} - ${bestOption.tariffName}` : 'No definido',
-    worstOption: worstOption ? `${worstOption.company} - ${worstOption.tariffName}` : 'No definido'
-  });
-  
-  container.innerHTML = `
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-      <h3 style="margin: 0 0 15px 0; display: flex; align-items: center; gap: 10px;">
-        <span style="font-size: 2rem;">⚡</span>
-        <span>Comparación Oficial vs PVPC ${isOfficialData ? '(Datos REE)' : '(Simulación)'}</span>
-      </h3>
-      
-      ${isOfficialData ? `
-        <div style="background: rgba(39, 174, 96, 0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #27ae60;">
-          <strong>🏛️ DATOS OFICIALES REE</strong> - Comparación basada en precios reales de Red Eléctrica de España
-        </div>
-      ` : `
-        <div style="background: rgba(243, 156, 18, 0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #f39c12;">
-          <strong>📊 SIMULACIÓN</strong> - Comparación basada en datos de respaldo realistas
-        </div>
-      `}
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
-        <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 8px;">
-          <div style="font-size: 0.9rem; opacity: 0.9;">PVPC Ahora</div>
-          <div style="font-size: 1.4rem; font-weight: bold;">${formatPrice(pvpcCurrentPrice)} €/kWh</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 8px;">
-          <div style="font-size: 0.9rem; opacity: 0.9;">PVPC Promedio Hoy</div>
-          <div style="font-size: 1.4rem; font-weight: bold;">${formatPrice(pvpcAveragePrice)} €/kWh</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 8px;">
-          <div style="font-size: 0.9rem; opacity: 0.9;">Mejor Opción</div>
-          <div style="font-size: 1.1rem; font-weight: bold;">${bestOption.company}</div>
-          <div style="font-size: 0.9rem; opacity: 0.8;">${bestOption.tariffName}</div>
-          <div style="font-size: 1rem; color: #00ff88;">Ahorra ${bestOption.dailySavingsPercent.toFixed(1)}%</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 8px;">
-          <div style="font-size: 0.9rem; opacity: 0.9;">Tarifas Analizadas</div>
-          <div style="font-size: 1.4rem; font-weight: bold;">${comparisons.length}</div>
-          <div style="font-size: 0.9rem; opacity: 0.8;">de ${Object.keys(SPANISH_ENERGY_COMPANIES).length} compañías</div>
-        </div>
-      </div>
-      
-      <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
-        <h4 style="margin: 0 0 10px 0; font-size: 1.1rem;">📊 Resumen de Comparación</h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; font-size: 0.9rem;">
-          <div>🟢 Tarifas que ahorran vs PVPC: <strong>${comparisons.filter(c => c.dailySavingsPercent > 0).length}</strong></div>
-          <div>🔴 Tarifas más caras que PVPC: <strong>${comparisons.filter(c => c.dailySavingsPercent <= 0).length}</strong></div>
-          <div>💰 Mejor ahorro posible: <strong>${bestOption.dailySavingsPercent.toFixed(1)}%</strong></div>
-          <div>📈 Peor opción: <strong>${worstOption.dailySavingsPercent.toFixed(1)}%</strong> (${worstOption.company})</div>
-        </div>
-      </div>
-    </div>
-    
-    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #3498db;">
-      <p style="margin: 0; font-size: 0.9rem; color: #2c3e50;">
-        <strong>ℹ️ Información importante:</strong> Esta comparación se basa en el precio PVPC oficial ${isOfficialData ? 'obtenido de Red Eléctrica de España (REE)' : 'usando datos de simulación realista'}. 
-        Los precios mostrados son orientativos y pueden variar según condiciones específicas de cada comercializadora. 
-        ${isOfficialData ? 'Los datos son oficiales y se actualizan en tiempo real.' : 'Para obtener datos oficiales, use el botón "OBTENER PRECIOS REALES".'}
-      </p>
-    </div>
-  `;
-  
-  // Si hay un usuario seleccionado, actualizar su análisis
-  const userCompanySelector = document.getElementById('user-company-selector');
-  const userTariffSelector = document.getElementById('user-tariff-selector');
-  
-  if (userCompanySelector && userCompanySelector.value && userTariffSelector && userTariffSelector.value) {
-    setTimeout(() => {
-      generateUserAnalysis(userCompanySelector.value, userTariffSelector.value);
-    }, 100);
-  }
+  // Función comentada - no se mostrará la sección de comparación detallada
+  return;
 }
+*/
 
 // Funciones helper para el cálculo de costos diarios
 function generateHourlyConsumption(dailyConsumption, pattern) {
@@ -2366,7 +2180,7 @@ function updateDailyComparison() {
   
   // Recalcular y actualizar la comparación
   const comparisonData = calculateTariffComparison(pvpcPrices);
-  renderTariffComparison(comparisonData);
+  // renderTariffComparison(comparisonData); // COMENTADO - sección eliminada
 }
 
 function getSavingsColor(savings) {
@@ -2458,13 +2272,20 @@ function updateUserTariffSelector() {
   
   if (selectedCompany === 'pvpc') {
     tariffSelector.innerHTML += `
-      <option value="2.0TD">2.0TD (Discriminación horaria)</option>
-      <option value="2.0A">2.0A (Sin discriminación)</option>
+      <option value="2.0TD - Con discriminación horaria">2.0TD - Con discriminación horaria</option>
+      <option value="2.0A - Sin discriminación horaria">2.0A - Sin discriminación horaria</option>
     `;
   } else if (SPANISH_ENERGY_COMPANIES && SPANISH_ENERGY_COMPANIES[selectedCompany]) {
     const company = SPANISH_ENERGY_COMPANIES[selectedCompany];
-    Object.keys(company.tarifas).forEach(tariffName => {
-      tariffSelector.innerHTML += `<option value="${tariffName}">${tariffName}</option>`;
+    Object.entries(company.tarifas).forEach(([tariffName, tarifaObj]) => {
+      // Mostrar el nombre comercial (tariffName) y, si existe, el tipo o descripción
+      let label = tariffName;
+      if (tarifaObj.tipo) {
+        label += ` - ${tarifaObj.tipo}`;
+      } else if (tarifaObj.descripcion) {
+        label += ` - ${tarifaObj.descripcion}`;
+      }
+      tariffSelector.innerHTML += `<option value="${tariffName}">${label}</option>`;
     });
   }
   
@@ -3709,6 +3530,31 @@ const SPANISH_ENERGY_COMPANIES = {
         margen_fijo: 0.003, // 0.3 céntimos/kWh - margen típico COR
         es_cor: true,
         consejo: "Tarifa regulada única - predictibilidad con margen oficial mínimo"
+      }
+    }
+  },
+  
+  "curenergia-cor": {
+    name: "Curenergia COR",
+    logo: "🏛️",
+    description: "Comercializadora de Referencia del grupo Iberdrola especializada en clientes domésticos. Aplica tarifas PVPC con márgenes regulados.",
+    tipo_compania: "Comercializadora de Referencia (COR)",
+    tarifas: {
+      "COR 2.0DHA (Discriminación horaria)": {
+        tipo: "PVPC con discriminación horaria + margen COR",
+        descripcion: "Tarifa PVPC oficial con 3 períodos horarios + margen regulado",
+        precio_base: "PVPC + margen regulado",
+        margen_fijo: 0.005, // 0.5 céntimos/kWh - margen típico COR
+        es_cor: true,
+        consejo: "Curenergia COR con precios oficiales - usa horas valle (00:00-08:00) para mayor ahorro"
+      },
+      "COR 2.0A (Sin discriminación horaria)": {
+        tipo: "PVPC sin discriminación + margen COR",
+        descripcion: "Tarifa PVPC oficial con precio único + margen regulado",
+        precio_base: "PVPC + margen regulado",
+        margen_fijo: 0.005, // 0.5 céntimos/kWh - margen típico COR
+        es_cor: true,
+        consejo: "Tarifa regulada única - consume cuando quieras con margen oficial mínimo"
       }
     }
   },
@@ -5023,7 +4869,7 @@ async function loadElectricityPrices() {
       
       // Actualizar comparación de tarifas
       const comparisonData = calculateTariffComparison(realData.prices, dataSource);
-      renderTariffComparison(comparisonData);
+      // renderTariffComparison(comparisonData); // COMENTADO - sección eliminada
       
       // Actualizar estado según la fuente
       if (dataSource === 'oficial') {
@@ -5054,7 +4900,7 @@ async function loadElectricityPrices() {
     
     // Comparación también para datos de ejemplo
     const comparisonData = calculateTariffComparison(mockData.prices, 'simulación');
-    renderTariffComparison(comparisonData);
+    // renderTariffComparison(comparisonData); // COMENTADO - sección eliminada
   }
 }
 
@@ -5107,7 +4953,7 @@ async function refreshPriceData() {
       
       // Actualizar comparación de tarifas
       const comparisonData = calculateTariffComparison(realData.prices.pvpc, dataSource);
-      renderTariffComparison(comparisonData);
+      // renderTariffComparison(comparisonData); // COMENTADO - sección eliminada
       
       if (dataSource === 'oficial') {
         updateApiStatus('connected', realData.date ? `(${realData.date})` : '');
@@ -5139,7 +4985,7 @@ async function refreshPriceData() {
       
       // Comparación para datos de ejemplo
       const comparisonData = calculateTariffComparison(mockData.prices.pvpc, 'simulación');
-      renderTariffComparison(comparisonData);
+      // renderTariffComparison(comparisonData); // COMENTADO - sección eliminada
       
       updateApiStatus('error', 'Usando datos de ejemplo');
     }
@@ -5166,7 +5012,7 @@ async function generateNewRealisticData() {
       
       // Actualizar comparación de tarifas
       const comparisonData = calculateTariffComparison(newData.prices.pvpc, dataSource);
-      renderTariffComparison(comparisonData);
+      // renderTariffComparison(comparisonData); // COMENTADO - sección eliminada
       
       const typeInfo = newData.isWeekend ? 'fin de semana' : 'entre semana';
       const seasonInfo = newData.season ? ` (${newData.season})` : '';
@@ -8798,12 +8644,31 @@ function updateDurationDisplay() {
 }
 
 function calculatePreciseHourlyComparison() {
+  console.log('🚀 Función calculatePreciseHourlyComparison() iniciada');
+  
   const applianceSelector = document.getElementById('appliance-selector');
   const consumptionInput = document.getElementById('appliance-consumption');
   const resultDiv = document.getElementById('hourly-comparison-result');
   
+  console.log('🔍 Elementos encontrados:', {
+    applianceSelector: !!applianceSelector,
+    consumptionInput: !!consumptionInput,
+    resultDiv: !!resultDiv
+  });
+  
+  if (!applianceSelector || !consumptionInput || !resultDiv) {
+    console.error('❌ Elementos no encontrados');
+    alert('Error: No se encontraron los elementos necesarios en la página');
+    return;
+  }
+  
   const appliance = applianceSelector.value;
   const consumption = parseFloat(consumptionInput.value);
+  
+  console.log('📋 Datos obtenidos:', {
+    appliance: appliance,
+    consumption: consumption
+  });
   
   // Obtener el nombre legible del electrodoméstico
   let applianceName = 'Electrodoméstico';
@@ -8871,7 +8736,8 @@ function calculatePreciseHourlyComparison() {
   const selectedTariff = tariffSelector ? tariffSelector.value : '2.0A';
   
   // Calcular costo real con la tarifa del usuario
-  let realCost = calculatePreciseCost(timing, pvpcPrices, consumption, selectedCompany, selectedTariff);
+  let realCostResult = calculatePreciseCost(timing, pvpcPrices, consumption, selectedCompany, selectedTariff);
+  let realCost = realCostResult.totalCost || realCostResult; // Compatibilidad con versión anterior
   
   // Debug: verificar que el cálculo funciona
   console.log('🔍 Debug calculadora:', {
@@ -8880,6 +8746,7 @@ function calculatePreciseHourlyComparison() {
     selectedCompany: selectedCompany,
     selectedTariff: selectedTariff,
     pvpcPricesLength: pvpcPrices.length,
+    realCostResult: realCostResult,
     realCost: realCost
   });
   
@@ -8896,15 +8763,143 @@ function calculatePreciseHourlyComparison() {
     }
   }
   
-  // Encontrar mejores horarios del día
-  const hourlyData = pvpcPrices.map((price, hour) => ({ hour, price }));
-  hourlyData.sort((a, b) => a.price - b.price);
-  const bestHours = hourlyData.slice(0, 3);
-  const worstHours = hourlyData.slice(-3);
+  // Encontrar mejores horarios del día usando la tarifa seleccionada del usuario
+  const hourlyDataWithUserTariff = [];
+  
+  for (let hour = 0; hour < 24; hour++) {
+    const pvpcPrice = pvpcPrices[hour] || 0.12;
+    
+    // Calcular precio con la tarifa del usuario para cada hora
+    let factor = 1.0;
+    let margin = 0;
+    
+    // Aplicar factores y márgenes según tipo de compañía y tarifa (misma lógica que en calculatePreciseCost)
+    if (selectedCompany === 'pvpc') {
+      // Tarifas PVPC oficiales
+      switch (selectedTariff) {
+        case '2.0A':
+          factor = 1.0; // Sin discriminación horaria
+          break;
+        case '2.0DHA':
+          if (hour >= 0 && hour < 8) factor = 0.75;  // Valle
+          else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) factor = 1.25; // Punta
+          else factor = 1.0; // Llano
+          break;
+        case '2.0DHS':
+          if (hour >= 0 && hour < 8) factor = 0.65;  // Supervalle
+          else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) factor = 1.35; // Punta
+          else factor = 1.0; // Llano
+          break;
+      }
+    } else if (selectedCompany.includes('-cor')) {
+      // Tarifas COR (con pequeño margen sobre PVPC)
+      margin = 0.005; // +0.5 céntimos sobre PVPC
+      switch (selectedTariff) {
+        case '2.0A':
+          factor = 1.0;
+          break;
+        case '2.0DHA':
+          if (hour >= 0 && hour < 8) factor = 0.75;
+          else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) factor = 1.25;
+          else factor = 1.0;
+          break;
+        case '2.0DHS':
+          if (hour >= 0 && hour < 8) factor = 0.65;
+          else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) factor = 1.35;
+          else factor = 1.0;
+          break;
+      }
+    } else {
+      // Tarifas de mercado libre (aplicar márgenes según compañía)
+      switch (selectedCompany) {
+        case 'iberdrola': margin = 0.025; break;
+        case 'endesa': margin = 0.022; break;
+        case 'naturgy': margin = 0.020; break;
+        case 'repsol': margin = 0.018; break;
+        case 'totalenergies': margin = 0.024; break;
+        case 'holaluz': margin = 0.028; break;
+        case 'edp': margin = 0.021; break;
+        case 'asenergy':
+          if (selectedTariff === 'Tarifa Indexada') {
+            margin = 0.015;
+          } else if (selectedTariff === 'Tarifa con Discriminación Horaria') {
+            if (hour >= 0 && hour < 8) factor = 0.75;
+            else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) factor = 1.25;
+            else factor = 1.0;
+            margin = 0.015;
+          } else if (selectedTariff === 'Tarifa Verde Plus') {
+            margin = 0.02;
+          } else {
+            margin = 0.019;
+          }
+          break;
+        case 'factorenergia': margin = 0.017; break;
+        case 'lucera': margin = 0.016; break;
+        case 'somenergia': margin = 0.015; break;
+        case 'octopus': margin = 0.014; break;
+        case 'nexus': margin = 0.023; break;
+        case 'gana': margin = 0.016; break;
+        case 'pepeenergy': margin = 0.013; break;
+        case 'curenergia-cor': margin = 0.005; break;
+        default: margin = 0.020; break;
+      }
+      
+      // Aplicar discriminación horaria para tarifas de mercado libre
+      switch (selectedTariff) {
+        case 'fija':
+          factor = 1.0;
+          const finalPrice = 0.12; // Precio fijo promedio
+          hourlyDataWithUserTariff.push({ hour, price: finalPrice });
+          continue; // Saltar al siguiente hour sin aplicar más cálculos
+        case 'indexada':
+          factor = 1.0; // Sigue precios del mercado
+          break;
+        case '2.0DHA':
+          if (hour >= 0 && hour < 8) factor = 0.75;
+          else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) factor = 1.25;
+          else factor = 1.0;
+          break;
+        case '2.0DHS':
+          if (hour >= 0 && hour < 8) factor = 0.65;
+          else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) factor = 1.35;
+          else factor = 1.0;
+          break;
+      }
+    }
+    
+    // Calcular precio final para esta hora con la tarifa del usuario
+    const finalPrice = (pvpcPrice * factor) + margin;
+    hourlyDataWithUserTariff.push({ hour, price: finalPrice });
+  }
+  
+  // Ordenar por precio y obtener mejores y peores horas
+  hourlyDataWithUserTariff.sort((a, b) => a.price - b.price);
+  const bestHours = hourlyDataWithUserTariff.slice(0, 3);
+  const worstHours = hourlyDataWithUserTariff.slice(-3);
+  
+  // Debug: verificar que los precios son diferentes
+  console.log('🔍 Debug precios por hora:', {
+    pvpcPricesArray: pvpcPrices.slice(0, 5), // Primeras 5 horas PVPC
+    userTariffPricesArray: hourlyDataWithUserTariff.slice(0, 5), // Primeras 5 horas con tarifa usuario
+    selectedCompany: selectedCompany,
+    selectedTariff: selectedTariff,
+    margin: margin,
+    factor: factor,
+    bestHours: bestHours,
+    worstHours: worstHours,
+    priceRange: {
+      min: Math.min(...hourlyDataWithUserTariff.map(h => h.price)),
+      max: Math.max(...hourlyDataWithUserTariff.map(h => h.price))
+    },
+    allDifferent: hourlyDataWithUserTariff.every((item, index) => 
+      index === 0 || item.price !== hourlyDataWithUserTariff[0].price
+    )
+  });
   
   // Crear objeto con información completa
   const costAnalysis = {
     realCost: realCost,
+    breakdown: realCostResult.breakdown, // Incluir el desglose por zonas horarias
     tariffName: userTariffName,
     tariffCompany: userTariffCompany,
     appliance: applianceName,
@@ -8924,6 +8919,30 @@ function calculatePreciseHourlyComparison() {
 function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tariffType) {
   let totalCost = 0;
   
+  // Variables para el desglose por zonas horarias
+  let valleMinutes = 0;
+  let llanoMinutes = 0;
+  let puntaMinutes = 0;
+  let valleCost = 0;
+  let llanoCost = 0;
+  let puntaCost = 0;
+  
+  // Definir las zonas horarias según el tipo de tarifa
+  const getPriceZone = (hour, tariffType) => {
+    if (tariffType === '2.0A' || tariffType === 'fija' || tariffType === 'indexada') {
+      return 'plana'; // Sin discriminación horaria
+    }
+    
+    // Para tarifas con discriminación horaria (2.0DHA, 2.0DHS, etc.)
+    if (hour >= 0 && hour < 8) {
+      return 'valle'; // Madrugada - más barato
+    } else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) {
+      return 'punta'; // Mañana media y tarde - más caro
+    } else {
+      return 'llano'; // Resto del día - precio intermedio
+    }
+  };
+  
   // Calcular el costo minuto a minuto usando el nuevo sistema
   const startTotalMinutes = timing.startTotalMinutes;
   const durationMinutes = timing.durationMinutes;
@@ -8935,6 +8954,7 @@ function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tari
     let hourlyPrice = pvpcPrices[currentHour] || 0.12; // Precio por defecto si no hay datos
     let factor = 1.0;
     let margin = 0;
+    const priceZone = getPriceZone(currentHour, tariffType);
     
     // Aplicar factores y márgenes según tipo de compañía y tarifa
     if (companyType === 'pvpc') {
@@ -8944,13 +8964,13 @@ function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tari
           factor = 1.0; // Sin discriminación horaria
           break;
         case '2.0DHA':
-          if (currentHour >= 0 && currentHour < 8) factor = 0.75;  // Valle
-          else if ((currentHour >= 10 && currentHour < 14) || (currentHour >= 18 && currentHour < 22)) factor = 1.25; // Punta
+          if (priceZone === 'valle') factor = 0.75;  // Valle
+          else if (priceZone === 'punta') factor = 1.25; // Punta
           else factor = 1.0; // Llano
           break;
         case '2.0DHS':
-          if (currentHour >= 0 && currentHour < 8) factor = 0.65;  // Supervalle
-          else if ((currentHour >= 10 && currentHour < 14) || (currentHour >= 18 && currentHour < 22)) factor = 1.35; // Punta
+          if (priceZone === 'valle') factor = 0.65;  // Supervalle
+          else if (priceZone === 'punta') factor = 1.35; // Punta
           else factor = 1.0; // Llano
           break;
       }
@@ -8962,13 +8982,13 @@ function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tari
           factor = 1.0;
           break;
         case '2.0DHA':
-          if (currentHour >= 0 && currentHour < 8) factor = 0.75;
-          else if ((currentHour >= 10 && currentHour < 14) || (currentHour >= 18 && currentHour < 22)) factor = 1.25;
+          if (priceZone === 'valle') factor = 0.75;
+          else if (priceZone === 'punta') factor = 1.25;
           else factor = 1.0;
           break;
         case '2.0DHS':
-          if (currentHour >= 0 && currentHour < 8) factor = 0.65;
-          else if ((currentHour >= 10 && currentHour < 14) || (currentHour >= 18 && currentHour < 22)) factor = 1.35;
+          if (priceZone === 'valle') factor = 0.65;
+          else if (priceZone === 'punta') factor = 1.35;
           else factor = 1.0;
           break;
       }
@@ -8997,7 +9017,20 @@ function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tari
           margin = 0.021; // +2.1 céntimos
           break;
         case 'asenergy':
-          margin = 0.019; // +1.9 céntimos
+          // Usar tarifas específicas de Asenergy
+          if (tariffType === 'Tarifa Indexada') {
+            margin = 0.015; // 1.5 céntimos según definición
+          } else if (tariffType === 'Tarifa con Discriminación Horaria') {
+            // Aplicar factores horarios específicos de Asenergy
+            if (priceZone === 'valle') factor = 0.75;  // Valle
+            else if (priceZone === 'punta') factor = 1.25; // Punta
+            else factor = 1.0; // Llano
+            margin = 0.015; // Margen base
+          } else if (tariffType === 'Tarifa Verde Plus') {
+            margin = 0.02; // 2.0 céntimos para energía renovable
+          } else {
+            margin = 0.019; // Margen por defecto
+          }
           break;
         case 'factorenergia':
           margin = 0.017; // +1.7 céntimos
@@ -9039,13 +9072,13 @@ function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tari
           factor = 1.0; // Sigue precios del mercado
           break;
         case '2.0DHA':
-          if (currentHour >= 0 && currentHour < 8) factor = 0.75;
-          else if ((currentHour >= 10 && currentHour < 14) || (currentHour >= 18 && currentHour < 22)) factor = 1.25;
+          if (priceZone === 'valle') factor = 0.75;
+          else if (priceZone === 'punta') factor = 1.25;
           else factor = 1.0;
           break;
         case '2.0DHS':
-          if (currentHour >= 0 && currentHour < 8) factor = 0.65;
-          else if ((currentHour >= 10 && currentHour < 14) || (currentHour >= 18 && currentHour < 22)) factor = 1.35;
+          if (priceZone === 'valle') factor = 0.65;
+          else if (priceZone === 'punta') factor = 1.35;
           else factor = 1.0;
           break;
       }
@@ -9054,10 +9087,63 @@ function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tari
     // Calcular precio final para este minuto
     const finalPrice = (hourlyPrice * factor) + margin;
     const minuteConsumption = consumption / 60; // kWh por minuto
-    totalCost += finalPrice * minuteConsumption;
+    const minuteCost = finalPrice * minuteConsumption;
+    totalCost += minuteCost;
+    
+    // Acumular estadísticas por zona horaria
+    if (tariffType !== '2.0A' && tariffType !== 'fija' && tariffType !== 'indexada') {
+      switch (priceZone) {
+        case 'valle':
+          valleMinutes++;
+          valleCost += minuteCost;
+          break;
+        case 'punta':
+          puntaMinutes++;
+          puntaCost += minuteCost;
+          break;
+        case 'llano':
+          llanoMinutes++;
+          llanoCost += minuteCost;
+          break;
+      }
+    }
   }
   
-  return totalCost;
+  // Crear objeto de retorno con desglose detallado
+  const result = {
+    totalCost: totalCost,
+    breakdown: null
+  };
+  
+  // Solo incluir desglose si hay discriminación horaria
+  if (tariffType !== '2.0A' && tariffType !== 'fija' && tariffType !== 'indexada' && 
+      (valleMinutes > 0 || llanoMinutes > 0 || puntaMinutes > 0)) {
+    
+    const totalMinutes = durationMinutes;
+    
+    result.breakdown = {
+      valle: {
+        minutes: valleMinutes,
+        percentage: (valleMinutes / totalMinutes * 100).toFixed(1),
+        cost: valleCost,
+        description: 'Zona Valle (00:00-08:00) - Más barata'
+      },
+      llano: {
+        minutes: llanoMinutes,
+        percentage: (llanoMinutes / totalMinutes * 100).toFixed(1),
+        cost: llanoCost,
+        description: 'Zona Llano (08:00-10:00, 14:00-18:00, 22:00-24:00) - Precio intermedio'
+      },
+      punta: {
+        minutes: puntaMinutes,
+        percentage: (puntaMinutes / totalMinutes * 100).toFixed(1),
+        cost: puntaCost,
+        description: 'Zona Punta (10:00-14:00, 18:00-22:00) - Más cara'
+      }
+    };
+  }
+  
+  return result;
 }
 
 // Función para generar recomendaciones inteligentes basadas en horas reales
@@ -9151,6 +9237,26 @@ function formatCurrency(cost) {
   }
 }
 
+function formatPricePerKwh(pricePerKwh) {
+  // Función para formatear precios por kWh
+  const priceInCents = pricePerKwh * 1000; // Convertir a céntimos por kWh
+  
+  if (priceInCents < 100) {
+    // Menos de 1 euro por kWh - mostrar en céntimos
+    return `${priceInCents.toFixed(1)} cént/kWh`;
+  } else {
+    // 1 euro o más por kWh - mostrar en euros y céntimos
+    const euros = Math.floor(priceInCents / 100);
+    const centimos = Math.round(priceInCents % 100);
+    
+    if (centimos === 0) {
+      return `${euros}€/kWh`;
+    } else {
+      return `${euros},${centimos.toString().padStart(2, '0')}€/kWh`;
+    }
+  }
+}
+
 function displayRealCostAnalysis(analysis) {
   const resultDiv = document.getElementById('hourly-comparison-result');
   
@@ -9173,7 +9279,7 @@ function displayRealCostAnalysis(analysis) {
   
   // Determiner calidad de la hora actual
   const currentHour = analysis.timing.startHour;
-  const currentPrice = analysis.currentHourPrice;
+  const currentHourPrice = analysis.currentHourPrice;
   
   // Crear un ranking completo de todas las 24 horas ordenadas por precio
   const allHours = [];
@@ -9195,7 +9301,7 @@ function displayRealCostAnalysis(analysis) {
     for (let hour = 0; hour < 24; hour++) {
       allHours.push({
         hour: hour,
-        price: priceMap.get(hour) || currentPrice || 0.12
+        price: priceMap.get(hour) || currentHourPrice || 0.12
       });
     }
   } else {
@@ -9203,7 +9309,7 @@ function displayRealCostAnalysis(analysis) {
     for (let hour = 0; hour < 24; hour++) {
       allHours.push({
         hour: hour,
-        price: currentPrice || 0.12
+        price: currentHourPrice || 0.12
       });
     }
   }
@@ -9211,68 +9317,148 @@ function displayRealCostAnalysis(analysis) {
   // Ordenar por precio para obtener ranking completo
   const sortedHours = [...allHours].sort((a, b) => a.price - b.price);
   
+  // Obtener precio actual y rangos básicos
+  const currentPrice = allHours[currentHour]?.price || 0;
+  const minPrice = sortedHours[0].price;
+  const maxPrice = sortedHours[sortedHours.length - 1].price;
+  const priceRange = maxPrice - minPrice;
+  
+  // Calcular precio promedio ponderado del período de uso en lugar de solo hora de inicio
+  let weightedAveragePrice = 0;
+  let totalMinutes = 0;
+  
+  if (analysis.breakdown) {
+    // Si hay desglose, usar el precio promedio ponderado real
+    const totalCost = analysis.realCost;
+    const totalConsumption = analysis.consumption * analysis.timing.totalDurationHours;
+    weightedAveragePrice = totalConsumption > 0 ? (totalCost / totalConsumption) : currentPrice;
+  } else {
+    // Si no hay desglose, usar precio de la hora de inicio
+    weightedAveragePrice = currentPrice;
+  }
+  
+  // Para una mejor clasificación, calcular percentil basado en el precio promedio del período
+  let effectivePercentile = priceRange > 0 ? ((weightedAveragePrice - minPrice) / priceRange) * 100 : 50;
+  
+  // Si hay desglose por zonas, ajustar la clasificación según la distribución
+  if (analysis.breakdown) {
+    const vallePercent = parseFloat(analysis.breakdown.valle.percentage);
+    const puntaPercent = parseFloat(analysis.breakdown.punta.percentage);
+    
+    // Ajustar percentil según distribución horaria
+    if (vallePercent >= 70) {
+      // Si más del 70% está en valle, es muy bueno
+      effectivePercentile = Math.min(effectivePercentile, 25);
+    } else if (vallePercent >= 50) {
+      // Si más del 50% está en valle, es bueno
+      effectivePercentile = Math.min(effectivePercentile, 45);
+    } else if (puntaPercent >= 50) {
+      // Si más del 50% está en punta, es malo
+      effectivePercentile = Math.max(effectivePercentile, 75);
+    } else if (puntaPercent >= 30) {
+      // Si más del 30% está en punta, es regular-malo
+      effectivePercentile = Math.max(effectivePercentile, 60);
+    }
+  }
+  
+  // Calcular en qué percentil está el precio actual (0 = más barato, 100 = más caro)
+  const pricePercentile = effectivePercentile;
+  
   let hourQuality = '';
   let hourIcon = '';
   let hourColor = '';
   let qualityMessage = '';
+  let positionInfo = '';
   
-  // Buscar la posición de la hora actual en el ranking completo
-  const currentHourRank = sortedHours.findIndex(h => h.hour === currentHour);
-  const totalHours = sortedHours.length;
+  // Clasificar basado en percentiles del precio (ajustado por distribución horaria)
+  if (pricePercentile <= 5) {
+    // Top 5% más barato
+    hourQuality = 'MEJOR HORARIO DEL DÍA';
+    hourIcon = '🥇';
+    hourColor = '#27ae60';
+    qualityMessage = analysis.breakdown ? 
+      '¡Perfecto! Tu horario aprovecha las horas más baratas del día.' :
+      '¡Perfecto! Esta es una de las horas más baratas de todo el día.';
+    positionInfo = analysis.breakdown ?
+      `Horario optimizado en el ${pricePercentile.toFixed(0)}% más económico` :
+      `Precio en el ${pricePercentile.toFixed(0)}% más barato del día`;
+  } else if (pricePercentile <= 25) {
+    // 25% más baratas
+    hourQuality = 'HORARIO MUY ECONÓMICO';
+    hourIcon = '🟢';
+    hourColor = '#27ae60';
+    qualityMessage = analysis.breakdown ?
+      'Excelente elección. Tu horario está entre los más económicos del día.' :
+      'Excelente elección. Esta hora está entre las más económicas del día.';
+    positionInfo = analysis.breakdown ?
+      `Horario en el ${pricePercentile.toFixed(0)}% más económico del día` :
+      `Precio en el ${pricePercentile.toFixed(0)}% más barato del día`;
+  } else if (pricePercentile <= 45) {
+    // Por debajo del promedio
+    hourQuality = 'HORARIO ECONÓMICO';
+    hourIcon = '💚';
+    hourColor = '#2ecc71';
+    qualityMessage = analysis.breakdown ?
+      'Buena elección. Tu horario tiene un costo por debajo del promedio diario.' :
+      'Buena elección. Precio por debajo del promedio diario.';
+    positionInfo = analysis.breakdown ?
+      `Horario ${(50 - pricePercentile).toFixed(0)}% más económico que el promedio` :
+      `Precio ${(50 - pricePercentile).toFixed(0)}% por debajo del promedio`;
+  } else if (pricePercentile <= 55) {
+    // Cerca del promedio
+    hourQuality = 'HORARIO PROMEDIO';
+    hourIcon = '�';
+    hourColor = '#f39c12';
+    qualityMessage = analysis.breakdown ?
+      'Horario con costo cerca del promedio diario. Ni muy caro ni muy barato.' :
+      'Precio cerca del promedio diario. Ni muy caro ni muy barato.';
+    positionInfo = `Costo cerca del promedio del día`;
+  } else if (pricePercentile <= 75) {
+    // Por encima del promedio
+    hourQuality = 'HORARIO CARO';
+    hourIcon = '🟠';
+    hourColor = '#e67e22';
+    qualityMessage = analysis.breakdown ?
+      'Horario con costo por encima del promedio. Considera mover más uso a horas valle.' :
+      'Precio por encima del promedio. Hay opciones más baratas disponibles.';
+    positionInfo = analysis.breakdown ?
+      `Horario ${(pricePercentile - 50).toFixed(0)}% más caro que el promedio` :
+      `Precio ${(pricePercentile - 50).toFixed(0)}% por encima del promedio`;
+  } else if (pricePercentile <= 95) {
+    // 25% más caras
+    hourQuality = 'HORARIO MUY CARO';
+    hourIcon = '�';
+    hourColor = '#e74c3c';
+    qualityMessage = analysis.breakdown ?
+      'Horario caro. Te recomendamos mover más uso a horas valle (madrugada).' :
+      'Hora cara. Te recomendamos cambiar a otro horario para ahorrar.';
+    positionInfo = analysis.breakdown ?
+      `Horario en el ${(100 - pricePercentile).toFixed(0)}% más caro del día` :
+      `Precio en el ${(100 - pricePercentile).toFixed(0)}% más caro del día`;
+  } else {
+    // Top 5% más caro
+    hourQuality = 'PEOR HORARIO DEL DÍA';
+    hourIcon = '�';
+    hourColor = '#c0392b';
+    qualityMessage = analysis.breakdown ?
+      'Este horario está entre los más caros del día. Considera reprogramar a horas valle.' :
+      'Esta es una de las horas más caras del día. Considera cambiar el horario.';
+    positionInfo = analysis.breakdown ?
+      `Horario en el ${(100 - pricePercentile).toFixed(0)}% más caro del día` :
+      `Precio en el ${(100 - pricePercentile).toFixed(0)}% más caro del día`;
+  }
   
   console.log('🕐 Debug ranking horas:', {
     currentHour: currentHour,
-    currentHourRank: currentHourRank,
-    totalHours: totalHours,
-    currentPrice: allHours[currentHour]?.price,
-    sortedPrices: sortedHours.slice(0, 5).map(h => `${h.hour}h: ${h.price.toFixed(4)}€`),
+    currentPrice: currentPrice.toFixed(4),
+    weightedAveragePrice: weightedAveragePrice.toFixed(4),
+    minPrice: minPrice.toFixed(4),
+    maxPrice: maxPrice.toFixed(4),
+    effectivePercentile: pricePercentile.toFixed(1),
+    classification: hourQuality,
+    hasBreakdown: !!analysis.breakdown,
     allPricesAvailable: !!analysis.allHourlyPrices
   });
-  
-  // Clasificar según percentiles más precisos
-  if (currentHourRank === 0) {
-    // Es la mejor hora del día (posición 0)
-    hourQuality = 'MEJOR HORA DEL DÍA';
-    hourIcon = '🥇';
-    hourColor = '#27ae60';
-    qualityMessage = '¡Perfecto! Esta es la hora más barata de todo el día.';
-  } else if (currentHourRank <= 2) {
-    // Top 3 mejores horas (posiciones 1-2)
-    hourQuality = 'HORA MUY BARATA';
-    hourIcon = '🟢';
-    hourColor = '#27ae60';
-    qualityMessage = 'Excelente elección. Esta es una de las horas más baratas del día.';
-  } else if (currentHourRank <= 5) {
-    // Top 6 mejores horas (posiciones 3-5)
-    hourQuality = 'HORA BARATA';
-    hourIcon = '💚';
-    hourColor = '#2ecc71';
-    qualityMessage = 'Buena elección. Precio por debajo del promedio diario.';
-  } else if (currentHourRank >= totalHours - 1) {
-    // Es la peor hora del día (última posición)
-    hourQuality = 'PEOR HORA DEL DÍA';
-    hourIcon = '🔴';
-    hourColor = '#e74c3c';
-    qualityMessage = 'Esta es la hora más cara del día. Considera cambiar el horario.';
-  } else if (currentHourRank >= totalHours - 3) {
-    // Top 3 peores horas
-    hourQuality = 'HORA MUY CARA';
-    hourIcon = '🟠';
-    hourColor = '#e67e22';
-    qualityMessage = 'Hora cara. Podrías ahorrar cambiando a otro horario.';
-  } else if (currentHourRank >= totalHours - 6) {
-    // Top 6 peores horas
-    hourQuality = 'HORA CARA';
-    hourIcon = '🟡';
-    hourColor = '#f39c12';
-    qualityMessage = 'Precio por encima del promedio. Hay opciones más baratas.';
-  } else {
-    // Hora intermedia (posiciones medias)
-    hourQuality = 'HORA INTERMEDIA';
-    hourIcon = '🟡';
-    hourColor = '#f39c12';
-    qualityMessage = 'Precio moderado. Ni la más cara ni la más barata.';
-  }
   
   const html = `
     <div style="background: linear-gradient(135deg, ${hourColor}, ${hourColor}dd); color: white; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
@@ -9289,7 +9475,7 @@ function displayRealCostAnalysis(analysis) {
         ${qualityMessage}
       </div>
       <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 8px;">
-        Posición ${currentHourRank + 1} de ${totalHours} horas del día
+        ${positionInfo}
       </div>
     </div>
     
@@ -9312,12 +9498,76 @@ function displayRealCostAnalysis(analysis) {
           <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">${analysis.tariffName}</div>
           <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">${analysis.tariffCompany}</div>
           <div style="background: rgba(255,255,255,0.2); padding: 12px; border-radius: 8px;">
-            <div style="font-size: 1.1rem; font-weight: bold;">${(costPerKwh * 1000).toFixed(1)} cént/kWh</div>
+            <div style="font-size: 1.1rem; font-weight: bold;">${formatPricePerKwh(costPerKwh)}</div>
             <div style="font-size: 0.9rem; opacity: 0.9;">Precio promedio en este horario</div>
           </div>
         </div>
       </div>
     </div>
+    
+    ${analysis.breakdown ? `
+    <!-- Desglose por zonas horarias -->
+    <div style="background: linear-gradient(135deg, #16a085, #1abc9c); color: white; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+      <h4 style="margin: 0 0 20px 0; text-align: center;">⏰ Desglose por Zonas Horarias</h4>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+        
+        <!-- Zona Valle -->
+        <div style="background: rgba(255,255,255,0.1); padding: 18px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">🌙</div>
+          <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;">VALLE</div>
+          <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 12px;">00:00 - 08:00</div>
+          <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+            <div style="font-size: 1.3rem; font-weight: bold;">${analysis.breakdown.valle.percentage}%</div>
+            <div style="font-size: 0.85rem; opacity: 0.9;">del tiempo</div>
+          </div>
+          <div style="font-size: 1rem; font-weight: bold;">${formatCurrency(analysis.breakdown.valle.cost).main}</div>
+          <div style="font-size: 0.8rem; opacity: 0.8;">${analysis.breakdown.valle.minutes} minutos</div>
+        </div>
+        
+        <!-- Zona Llano -->
+        <div style="background: rgba(255,255,255,0.1); padding: 18px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">🌅</div>
+          <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;">LLANO</div>
+          <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 12px;">08:00-10:00, 14:00-18:00, 22:00-24:00</div>
+          <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+            <div style="font-size: 1.3rem; font-weight: bold;">${analysis.breakdown.llano.percentage}%</div>
+            <div style="font-size: 0.85rem; opacity: 0.9;">del tiempo</div>
+          </div>
+          <div style="font-size: 1rem; font-weight: bold;">${formatCurrency(analysis.breakdown.llano.cost).main}</div>
+          <div style="font-size: 0.8rem; opacity: 0.8;">${analysis.breakdown.llano.minutes} minutos</div>
+        </div>
+        
+        <!-- Zona Punta -->
+        <div style="background: rgba(255,255,255,0.1); padding: 18px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 8px;">☀️</div>
+          <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 8px;">PUNTA</div>
+          <div style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 12px;">10:00-14:00, 18:00-22:00</div>
+          <div style="background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+            <div style="font-size: 1.3rem; font-weight: bold;">${analysis.breakdown.punta.percentage}%</div>
+            <div style="font-size: 0.85rem; opacity: 0.9;">del tiempo</div>
+          </div>
+          <div style="font-size: 1rem; font-weight: bold;">${formatCurrency(analysis.breakdown.punta.cost).main}</div>
+          <div style="font-size: 0.8rem; opacity: 0.8;">${analysis.breakdown.punta.minutes} minutos</div>
+        </div>
+        
+      </div>
+      
+      <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; margin-top: 20px; text-align: center;">
+        <div style="font-size: 0.95rem; margin-bottom: 8px;">
+          💡 <strong>Análisis de Distribución:</strong> 
+          ${analysis.breakdown.valle.percentage > 50 ? 
+            'Excelente! La mayor parte del uso está en horas valle (más baratas).' :
+            analysis.breakdown.punta.percentage > 50 ?
+            'Atención: La mayor parte del uso está en horas punta (más caras). Considera reprogramar.' :
+            'Distribución equilibrada entre diferentes zonas horarias.'
+          }
+        </div>
+        <div style="font-size: 0.85rem; opacity: 0.8;">
+          🏆 Zona más económica: Valle (madrugada) | 💸 Zona más cara: Punta (mañana y tarde)
+        </div>
+      </div>
+    </div>
+    ` : ''}
     
     <div style="background: linear-gradient(135deg, #2c3e50, #34495e); color: white; padding: 25px; border-radius: 12px;">
       <h4 style="margin: 0 0 20px 0; text-align: center;">💡 Recomendaciones para HOY</h4>
@@ -9326,10 +9576,12 @@ function displayRealCostAnalysis(analysis) {
         <!-- Mejores horas -->
         <div style="background: linear-gradient(135deg, #27ae60, #2ecc71); padding: 18px; border-radius: 10px;">
           <h5 style="margin: 0 0 12px 0; color: white; font-weight: 700;">🟢 Mejores Horas HOY</h5>
-          ${analysis.bestHours.map(h => `
+          ${analysis.bestHours
+            .sort((a, b) => a.hour - b.hour) // Ordenar cronológicamente
+            .map(h => `
             <div style="margin-bottom: 8px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px;">
               <strong>${h.hour.toString().padStart(2, '0')}:00 - ${(h.hour + 1).toString().padStart(2, '0')}:00</strong>
-              <br><span style="font-size: 0.9rem; opacity: 0.9;">${h.price.toFixed(3)}€/kWh</span>
+              <br><span style="font-size: 0.9rem; opacity: 0.9;">${formatPricePerKwh(h.price)}</span>
             </div>
           `).join('')}
           <div style="margin-top: 12px; font-size: 0.9rem; opacity: 0.9; text-align: center;">
@@ -9340,10 +9592,12 @@ function displayRealCostAnalysis(analysis) {
         <!-- Peores horas -->
         <div style="background: linear-gradient(135deg, #e74c3c, #c0392b); padding: 18px; border-radius: 10px;">
           <h5 style="margin: 0 0 12px 0; color: white; font-weight: 700;">🔴 Evita Estas Horas</h5>
-          ${analysis.worstHours.map(h => `
+          ${analysis.worstHours
+            .sort((a, b) => a.hour - b.hour) // Ordenar cronológicamente
+            .map(h => `
             <div style="margin-bottom: 8px; background: rgba(255,255,255,0.1); padding: 8px; border-radius: 6px;">
               <strong>${h.hour.toString().padStart(2, '0')}:00 - ${(h.hour + 1).toString().padStart(2, '0')}:00</strong>
-              <br><span style="font-size: 0.9rem; opacity: 0.9;">${h.price.toFixed(3)}€/kWh</span>
+              <br><span style="font-size: 0.9rem; opacity: 0.9;">${formatPricePerKwh(h.price)}</span>
             </div>
           `).join('')}
           <div style="margin-top: 12px; font-size: 0.9rem; opacity: 0.9; text-align: center;">
@@ -9664,7 +9918,9 @@ function updateHourlyTariff() {
   }
   
   const selectedCompany = companySelector.value;
-  console.log('🔄 Actualizando tarifas horarias para:', selectedCompany);
+  
+  // Guardar la tarifa seleccionada actualmente
+  const currentSelectedTariff = tariffSelector.value;
   
   // Actualizar las opciones de tarifa según la compañía seleccionada
   tariffSelector.innerHTML = '';
@@ -9692,7 +9948,6 @@ function updateHourlyTariff() {
       tariffs.forEach(tariffName => {
         tariffSelector.innerHTML += `<option value="${tariffName}">${tariffName}</option>`;
       });
-      console.log('✅ Tarifas específicas cargadas para', company.name, ':', tariffs);
     } else {
       // Fallback: tarifas genéricas
       tariffSelector.innerHTML = `
@@ -9700,7 +9955,6 @@ function updateHourlyTariff() {
         <option value="indexada">Tarifa Indexada</option>
         <option value="2.0DHA">Discriminación Horaria (2 períodos)</option>
       `;
-      console.log('⚠️ Usando tarifas genéricas para', selectedCompany);
     }
   } else {
     // Tarifas genéricas para compañías no definidas
@@ -9711,6 +9965,14 @@ function updateHourlyTariff() {
       <option value="2.0DHS">Discriminación Horaria + Supervalle</option>
     `;
     console.log('⚠️ Compañía no encontrada, usando tarifas genéricas para:', selectedCompany);
+  }
+  
+  // Intentar restaurar la selección anterior si existe en las nuevas opciones
+  if (currentSelectedTariff) {
+    const option = tariffSelector.querySelector(`option[value="${currentSelectedTariff}"]`);
+    if (option) {
+      tariffSelector.value = currentSelectedTariff;
+    }
   }
 }
 
@@ -9817,6 +10079,623 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+// ===== NUEVA CALCULADORA DE ELECTRODOMÉSTICOS =====
+
+// Función para actualizar los campos automáticamente
+function updateNewCalculatorFields() {
+  const applianceSelect = document.getElementById('new-calc-appliance');
+  const consumptionInput = document.getElementById('new-calc-consumption');
+  const startHour = document.getElementById('new-calc-start-hour');
+  const startMinute = document.getElementById('new-calc-start-minute');
+  const durationHours = document.getElementById('new-calc-duration-hours');
+  const durationMinutes = document.getElementById('new-calc-duration-minutes');
+  
+  if (!applianceSelect) return; // Si no existe la calculadora, salir
+  
+  // Actualizar consumo cuando cambia el electrodoméstico
+  applianceSelect.addEventListener('change', function() {
+    consumptionInput.value = this.value;
+    updateNewEndTime();
+  });
+  
+  // Actualizar tiempo final cuando cambian los campos de tiempo
+  [startHour, startMinute, durationHours, durationMinutes].forEach(field => {
+    if (field) {
+      field.addEventListener('change', updateNewEndTime);
+    }
+  });
+  
+  updateNewEndTime();
+
+  // --- ACTUALIZAR SELECTOR DE TARIFAS SEGÚN COMPAÑÍA ---
+  const companySelector = document.getElementById('new-calc-company');
+  const tariffSelector = document.getElementById('new-calc-tariff');
+  if (companySelector && tariffSelector) {
+    companySelector.addEventListener('change', function() {
+      const selectedCompany = companySelector.value;
+      tariffSelector.innerHTML = '<option value="">-- Selecciona tu tarifa --</option>';
+      if (!selectedCompany) {
+        tariffSelector.disabled = true;
+        return;
+      }
+      tariffSelector.disabled = false;
+      if (selectedCompany === 'pvpc') {
+        tariffSelector.innerHTML += `
+          <option value="2.0TD - Con discriminación horaria">2.0TD - Con discriminación horaria</option>
+          <option value="2.0A - Sin discriminación horaria">2.0A - Sin discriminación horaria</option>
+        `;
+      } else if (typeof SPANISH_ENERGY_COMPANIES !== 'undefined' && SPANISH_ENERGY_COMPANIES[selectedCompany]) {
+        const company = SPANISH_ENERGY_COMPANIES[selectedCompany];
+        Object.entries(company.tarifas).forEach(([tariffName, tarifaObj]) => {
+          let label = tariffName;
+          if (tarifaObj.tipo) {
+            label += ` - ${tarifaObj.tipo}`;
+          } else if (tarifaObj.descripcion) {
+            label += ` - ${tarifaObj.descripcion}`;
+          }
+          tariffSelector.innerHTML += `<option value="${tariffName}">${label}</option>`;
+        });
+      }
+    });
+    // Lanzar evento inicial para que el selector se rellene al cargar
+    companySelector.dispatchEvent(new Event('change'));
+  }
+}
+
+function updateNewEndTime() {
+  const startHourElem = document.getElementById('new-calc-start-hour');
+  const startMinuteElem = document.getElementById('new-calc-start-minute');
+  const durationHoursElem = document.getElementById('new-calc-duration-hours');
+  const durationMinutesElem = document.getElementById('new-calc-duration-minutes');
+  const endTimeElem = document.getElementById('new-calc-end-time');
+  const durationDisplayElem = document.getElementById('new-calc-duration-display');
+  
+  if (!startHourElem || !endTimeElem) return;
+  
+  const startHour = parseInt(startHourElem.value);
+  const startMinute = parseInt(startMinuteElem.value);
+  const durationHours = parseInt(durationHoursElem.value);
+  const durationMinutes = parseInt(durationMinutesElem.value);
+  
+  // Calcular tiempo final
+  let totalMinutes = (startHour * 60 + startMinute) + (durationHours * 60 + durationMinutes);
+  const endHour = Math.floor(totalMinutes / 60) % 24;
+  const endMinute = totalMinutes % 60;
+  
+  // Actualizar displays
+  endTimeElem.textContent = 
+    `${endHour.toString().padStart(2, '0')}:${endMinute.toString().padStart(2, '0')}`;
+  
+  const durationText = durationHours > 0 && durationMinutes > 0 ? 
+    `${durationHours} hora${durationHours > 1 ? 's' : ''} ${durationMinutes} min` :
+    durationHours > 0 ? `${durationHours} hora${durationHours > 1 ? 's' : ''}` :
+    `${durationMinutes} minutos`;
+  
+  if (durationDisplayElem) {
+    durationDisplayElem.textContent = durationText;
+  }
+}
+
+// Función principal de cálculo (versión actualizada desde GitHub)
+function calculateNewApplianceCost() {
+  console.log('🧮 Iniciando cálculo de la nueva calculadora...');
+  
+  const applianceSelector = document.getElementById('new-calc-appliance');
+  const consumptionInput = document.getElementById('new-calc-consumption');
+  const resultDiv = document.getElementById('new-calc-results');
+  
+  const appliance = applianceSelector.value;
+  const consumption = parseFloat(consumptionInput.value);
+  
+  // Obtener el nombre legible del electrodoméstico
+  let applianceName = 'Electrodoméstico';
+  if (applianceSelector.selectedIndex >= 0) {
+    const selectedOption = applianceSelector.options[applianceSelector.selectedIndex];
+    applianceName = selectedOption.textContent || selectedOption.text || 'Electrodoméstico';
+  }
+  
+  // Obtener tiempos precisos usando el nuevo sistema adaptado
+  const timing = getNewTimingData();
+  
+  // Validaciones
+  if (!appliance) {
+    showNewCalculatorError('Selecciona un electrodoméstico primero');
+    return;
+  }
+  
+  if (isNaN(consumption) || consumption <= 0) {
+    showNewCalculatorError('Introduce un consumo válido');
+    return;
+  }
+  
+  if (timing.totalDurationHours <= 0) {
+    showNewCalculatorError('La duración debe ser mayor a 0');
+    return;
+  }
+  
+  // Obtener precios PVPC (usar datos globales o generar si no existen)
+  let pvpcPrices = [];
+  if (globalPrices && globalPrices.pvpc && globalPrices.pvpc.length > 0) {
+    pvpcPrices = globalPrices.pvpc;
+  } else if (globalPrices && Array.isArray(globalPrices) && globalPrices.length > 0) {
+    pvpcPrices = globalPrices;
+  } else {
+    console.log('⚠️ Generando precios de respaldo realistas');
+    // Generar precios de respaldo realistas
+    for (let hour = 0; hour < 24; hour++) {
+      let price = 0.12; // Precio base
+      if (hour >= 0 && hour < 8) price *= 0.8;        // Valle
+      else if ((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) price *= 1.4; // Punta
+      else price *= 1.1; // Llano
+      pvpcPrices.push(price);
+    }
+  }
+  
+  // Calcular consumo total del electrodoméstico
+  const totalConsumption = consumption * timing.totalDurationHours;
+  
+  // Obtener tarifa actual del usuario
+  const companySelector = document.getElementById('new-calc-company');
+  const tariffSelector = document.getElementById('new-calc-tariff');
+  const selectedCompany = companySelector ? companySelector.value : 'pvpc';
+  const selectedTariff = tariffSelector ? tariffSelector.value : '2.0A';
+  
+  // Calcular costo real con la tarifa del usuario
+  let realCost = calculateNewPreciseCost(timing, pvpcPrices, consumption, selectedCompany, selectedTariff);
+  
+  // Debug: verificar que el cálculo funciona
+  console.log('🔍 Debug calculadora:', {
+    timing: timing,
+    consumption: consumption,
+    selectedCompany: selectedCompany,
+    selectedTariff: selectedTariff,
+    pvpcPricesLength: pvpcPrices.length,
+    realCost: realCost
+  });
+  
+  let userTariffName = 'PVPC 2.0A';
+  let userTariffCompany = 'Estado Español (PVPC)';
+  
+  // Obtener información de la tarifa seleccionada
+  if (selectedCompany && companySelector && tariffSelector) {
+    const selectedCompanyOption = companySelector.options[companySelector.selectedIndex];
+    const selectedTariffOption = tariffSelector.options[tariffSelector.selectedIndex];
+    if (selectedCompanyOption && selectedTariffOption) {
+      userTariffCompany = selectedCompanyOption.textContent;
+      userTariffName = selectedTariffOption.textContent;
+    }
+  }
+  
+  // Encontrar mejores horarios del día
+  const hourlyData = pvpcPrices.map((price, hour) => ({ hour, price }));
+  hourlyData.sort((a, b) => a.price - b.price);
+  const bestHours = hourlyData.slice(0, 3);
+  const worstHours = hourlyData.slice(-3);
+  
+  // Crear objeto con información completa (versión actualizada)
+  const costAnalysis = {
+    realCost: realCost,
+    tariffName: userTariffName,
+    tariffCompany: userTariffCompany,
+    appliance: applianceName,
+    applianceValue: appliance,
+    consumption: consumption,
+    timing: timing,
+    bestHours: bestHours,
+    worstHours: worstHours,
+    allHourlyPrices: pvpcPrices, // Pasar todos los precios horarios
+    currentHourPrice: pvpcPrices[timing.startHour] || 0.12
+  };
+  
+  console.log('✅ Análisis de costo completado:', costAnalysis);
+  
+  // Generar resultado visual enfocado en costo real (versión actualizada)
+  displayNewRealCostAnalysis(costAnalysis);
+}
+
+// Función adaptada para obtener timing de la nueva calculadora
+function getNewTimingData() {
+  const startHour = parseInt(document.getElementById('new-calc-start-hour').value);
+  const startMinute = parseInt(document.getElementById('new-calc-start-minute').value);
+  const durationHours = parseInt(document.getElementById('new-calc-duration-hours').value);
+  const durationMinutes = parseInt(document.getElementById('new-calc-duration-minutes').value);
+  
+  // Convertir a minutos totales desde medianoche
+  const startTotalMinutes = startHour * 60 + startMinute;
+  let endTotalMinutes = startTotalMinutes + (durationHours * 60 + durationMinutes);
+  
+  // Calcular hora de fin
+  const endHour = Math.floor(endTotalMinutes / 60) % 24;
+  const endMinute = endTotalMinutes % 60;
+  
+  // Calcular la duración en minutos y horas
+  const durationMinutesTotal = durationHours * 60 + durationMinutes;
+  const totalDurationHours = durationMinutesTotal / 60;
+  
+  return {
+    startHour,
+    startMinute,
+    endHour,
+    endMinute,
+    totalDurationHours,
+    durationMinutes: durationMinutesTotal,
+    startTotalMinutes,
+    endTotalMinutes
+  };
+}
+
+// Función para formatear precios (desde GitHub)
+function formatCurrency(amount) {
+  const cents = Math.round(amount * 100);
+  const euros = amount;
+  
+  return {
+    main: `${euros.toFixed(4)}€`,
+    secondary: `${cents} céntimos`,
+    euros: euros,
+    cents: cents
+  };
+}
+
+// Función eliminada - ahora se usa getNewTimingData() que es más completa
+
+function calculateNewPreciseCost(timing, pvpcPrices, consumptionKWh, companyCode, tariffCode) {
+  console.log('💡 Calculando costo preciso:', { timing, consumptionKWh, companyCode, tariffCode });
+  
+  let totalCost = 0;
+  const hourlyConsumption = [];
+  
+  // Cálculo minuto por minuto (versión avanzada desde GitHub)
+  for (let minute = 0; minute < timing.durationMinutes; minute++) {
+    const currentMinute = timing.startTotalMinutes + minute;
+    const currentHour = Math.floor(currentMinute / 60) % 24;
+    
+    // Potencia constante distribuida por minuto
+    const powerPerMinute = consumptionKWh / 60; // kWh por minuto
+    
+    // Obtener precio de la hora actual
+    let pricePerKWh = 0;
+    
+    // Si hay datos de precios disponibles, usarlos
+    if (pvpcPrices && pvpcPrices.length >= 24) {
+      pricePerKWh = pvpcPrices[currentHour] || 0;
+    } else {
+      // Precio de respaldo realista por horas
+      if (currentHour >= 0 && currentHour < 8) pricePerKWh = 0.10;        // Valle nocturno
+      else if (currentHour >= 8 && currentHour < 10) pricePerKWh = 0.15;   // Transición matutina
+      else if (currentHour >= 10 && currentHour < 14) pricePerKWh = 0.25;  // Punta mañana
+      else if (currentHour >= 14 && currentHour < 18) pricePerKWh = 0.18;  // Llano tarde
+      else if (currentHour >= 18 && currentHour < 22) pricePerKWh = 0.28;  // Punta tarde
+      else pricePerKWh = 0.12; // Resto
+    }
+    
+    // Aplicar tarifas de compañías si no es PVPC
+    if (companyCode && companyCode !== 'pvpc' && SPANISH_ENERGY_COMPANIES[companyCode]) {
+      const company = SPANISH_ENERGY_COMPANIES[companyCode];
+      if (company.tariffs && company.tariffs[tariffCode]) {
+        const tariff = company.tariffs[tariffCode];
+        if (tariff.price_kwh_all_day) {
+          // Tarifa plana
+          pricePerKWh = tariff.price_kwh_all_day;
+        } else if (tariff.price_kwh_peak && tariff.price_kwh_valley) {
+          // Tarifa con discriminación horaria
+          const isSpeedHour = isSpeedTime(currentHour);
+          pricePerKWh = isSpeedHour ? tariff.price_kwh_peak : tariff.price_kwh_valley;
+        }
+      }
+    }
+    
+    // Calcular costo por este minuto
+    const costThisMinute = powerPerMinute * pricePerKWh;
+    totalCost += costThisMinute;
+    
+    // Registrar en array horario para análisis
+    if (!hourlyConsumption[currentHour]) {
+      hourlyConsumption[currentHour] = {
+        consumption: 0,
+        cost: 0,
+        price: pricePerKWh,
+        minutes: 0
+      };
+    }
+    hourlyConsumption[currentHour].consumption += powerPerMinute;
+    hourlyConsumption[currentHour].cost += costThisMinute;
+    hourlyConsumption[currentHour].minutes++;
+  }
+  
+  console.log('📊 Consumo horario detallado:', hourlyConsumption);
+  console.log('💰 Costo total calculado:', totalCost);
+  
+  return {
+    totalCost: totalCost,
+    hourlyBreakdown: hourlyConsumption,
+    averagePricePerKWh: totalCost / consumptionKWh,
+    totalConsumption: consumptionKWh,
+    calculation: 'minute-by-minute'
+  };
+}
+
+// Función auxiliar para determinar si es hora punta
+function isSpeedTime(hour) {
+  // Horario punta estándar en España: 10-14h y 18-22h
+  return (hour >= 10 && hour < 14) || (hour >= 18 && hour < 22);
+}
+
+function displayNewRealCostAnalysis(analysis) {
+  const resultDiv = document.getElementById('new-calc-results');
+  
+  // Obtener el costo total (manejar tanto el formato antiguo como el nuevo)
+  let totalCost = 0;
+  if (typeof analysis.realCost === 'object' && analysis.realCost.totalCost !== undefined) {
+    totalCost = analysis.realCost.totalCost;
+  } else if (typeof analysis.realCost === 'number') {
+    totalCost = analysis.realCost;
+  } else {
+    totalCost = 0;
+  }
+  
+  const costInCents = Math.round(totalCost * 100);
+  
+  // Determinar si es hora cara o barata
+  const currentHourRank = analysis.bestHours.findIndex(h => h.hour === analysis.timing.startHour);
+  let hourQuality = '';
+  let hourIcon = '';
+  let hourColor = '';
+  
+  if (currentHourRank >= 0 && currentHourRank < 3) {
+    hourQuality = 'Hora BARATA';
+    hourIcon = '🟢';
+    hourColor = '#27ae60';
+  } else if (analysis.worstHours.some(h => h.hour === analysis.timing.startHour)) {
+    hourQuality = 'Hora CARA';
+    hourIcon = '🔴';
+    hourColor = '#e74c3c';
+  } else {
+    hourQuality = 'Hora INTERMEDIA';
+    hourIcon = '🟡';
+    hourColor = '#f39c12';
+  }
+  
+  // Crear gráfico de precios por hora (con tarifa seleccionada y horas de uso marcadas)
+  let hourlyChart = '';
+  // Obtener tarifa seleccionada
+  const companySelect = document.getElementById('newCompany');
+  const tariffSelect = document.getElementById('newTariff');
+  const selectedCompany = companySelect ? companySelect.value : 'pvpc';
+  const selectedTariff = tariffSelect ? tariffSelect.value : '';
+  // Obtener precios de la tarifa seleccionada
+  const getTariffHourlyPrices = window.getTariffHourlyPrices || function(companyCode, tariffCode, pvpcPrices) {
+    if (!companyCode || companyCode === 'pvpc') return analysis.allHourlyPrices;
+    if (window.SPANISH_ENERGY_COMPANIES && window.SPANISH_ENERGY_COMPANIES[companyCode]) {
+      const company = window.SPANISH_ENERGY_COMPANIES[companyCode];
+      if (company.tariffs && company.tariffs[tariffCode]) {
+        const tariff = company.tariffs[tariffCode];
+        let arr = [];
+        for (let hour = 0; hour < 24; hour++) {
+          if (tariff.price_kwh_all_day) arr.push(tariff.price_kwh_all_day);
+          else if (tariff.price_kwh_peak && tariff.price_kwh_valley) arr.push(((hour >= 10 && hour < 14) || (hour >= 18 && hour < 22)) ? tariff.price_kwh_peak : tariff.price_kwh_valley);
+          else arr.push(analysis.allHourlyPrices[hour] || 0.12);
+        }
+        return arr;
+      }
+    }
+    return analysis.allHourlyPrices;
+  };
+  const hourlyPrices = getTariffHourlyPrices(selectedCompany, selectedTariff, analysis.allHourlyPrices);
+  // Calcular horas de uso
+  const usageHours = [];
+  if (analysis.timing) {
+    let start = analysis.timing.startHour;
+    let end = analysis.timing.endHour;
+    let duration = Math.ceil(analysis.timing.totalDurationHours);
+    for (let i = 0; i < duration; i++) usageHours.push((start + i) % 24);
+  }
+  if (hourlyPrices && hourlyPrices.length >= 24) {
+    const maxPrice = Math.max(...hourlyPrices);
+    const minPrice = Math.min(...hourlyPrices);
+    const priceRange = maxPrice - minPrice;
+    hourlyChart = `
+      <div style="background: linear-gradient(135deg, #34495e, #2c3e50); color: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+        <h4 style="margin: 0 0 15px 0; text-align: center;">📊 Precios por Hora (${selectedCompany.toUpperCase()})</h4>
+        <div style="display: flex; align-items: end; justify-content: space-between; height: 100px; margin-bottom: 10px;">
+          ${hourlyPrices.map((price, hour) => {
+            const height = priceRange > 0 ? ((price - minPrice) / priceRange) * 80 + 10 : 45;
+            const isCurrentHour = hour === analysis.timing.startHour;
+            // Uso fraccionario
+            let usageStart = analysis.timing ? (analysis.timing.startTotalMinutes / 60) : 0;
+            let usageEnd = analysis.timing ? (analysis.timing.endTotalMinutes / 60) : 0;
+            let usageStartHour = Math.floor(usageStart);
+            let usageEndHour = Math.floor(usageEnd);
+            let usageStartFrac = usageStart - usageStartHour;
+            let usageEndFrac = usageEnd - usageEndHour;
+            let isUsageHour = false, isStartFrac = false, isEndFrac = false;
+            if (analysis.timing) {
+              if (hour === usageStartHour && usageStartFrac > 0) { isUsageHour = true; isStartFrac = true; }
+              else if (hour === usageEndHour && usageEndFrac > 0) { isUsageHour = true; isEndFrac = true; }
+              else if (hour > usageStartHour && hour < usageEndHour) { isUsageHour = true; }
+              // Si el uso cruza medianoche
+              if (usageEnd < usageStart) {
+                if (hour > usageStartHour || hour < usageEndHour) isUsageHour = true;
+                if (hour === usageStartHour && usageStartFrac > 0) isStartFrac = true;
+                if (hour === usageEndHour && usageEndFrac > 0) isEndFrac = true;
+              }
+            }
+            // Color de barra según lógica oficial API (PVPC): azul hora actual, verde <=0.08, naranja <=0.12, rojo >0.12
+            let barColor;
+            if (isCurrentHour) {
+              barColor = '#2196F3'; // Azul para hora actual
+            } else if (price <= 0.08) {
+              barColor = '#27ae60'; // Verde
+            } else if (price <= 0.12) {
+              barColor = '#f39c12'; // Naranja
+            } else {
+              barColor = '#e67e22'; // Rojo
+            }
+            let topMark = '';
+            let fracBar = '';
+            // Barrita blanca para fracciones en inicio/fin
+            if (isStartFrac) {
+              // Fracción blanca desde el punto de inicio hasta el final de la barra
+              fracBar = `<div style=\"position:absolute;top:-7px;left:${usageStartFrac*100}%;width:${(1-usageStartFrac)*100}%;height:5px;background:#fff;border-radius:2px;opacity:0.85;pointer-events:none;\"></div>`;
+            } else if (isEndFrac) {
+              // Fracción blanca desde el inicio hasta el punto de fin
+              fracBar = `<div style=\"position:absolute;top:-7px;left:0;width:${usageEndFrac*100}%;height:5px;background:#fff;border-radius:2px;opacity:0.85;pointer-events:none;\"></div>`;
+            }
+            // Línea vertical para la hora actual con minutos
+            let currentHourLine = '';
+            if (isCurrentHour) {
+              const now = new Date();
+              const minutes = now.getMinutes();
+              if (minutes > 0) {
+                const leftPercent = (minutes / 60) * 100;
+                currentHourLine = `<div style=\"position:absolute;top:0;left:${leftPercent}%;width:2px;height:100%;background:#fff;z-index:3;box-shadow:0 0 4px #000;pointer-events:none;\"></div>`;
+              }
+            }
+            // Rectángulo azul y rayito en todas las barras de uso
+            if (isUsageHour) {
+              topMark = `<div style=\"position:absolute;top:-15px;left:0;width:100%;height:14px;background:#3498db;border-radius:3px 3px 0 0;display:flex;align-items:center;justify-content:center;z-index:2;\"><span style=\"font-size:1.1rem;color:#fff;text-shadow:0 0 6px #000,0 0 2px #3498db;pointer-events:none;line-height:1;\">⚡</span></div>`;
+            }
+            return `
+              <div style=\"flex:1;display:flex;flex-direction:column;align-items:center;margin:0 1px;\">
+                <div style=\"width:100%;background:${barColor};height:${height}px;margin-bottom:2px;border-radius:2px;position:relative;\">
+                  ${topMark}${fracBar}${currentHourLine}
+                </div>
+                <div style=\"font-size:0.7rem;transform:rotate(-45deg);transform-origin:center;white-space:nowrap;\">${hour.toString().padStart(2,'0')}</div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+        <div style="text-align: center; font-size: 0.9rem; opacity: 0.9;">
+          <span style='color:#27ae60;font-weight:bold;'>●</span> ≤ 0,08 €/kWh (Barata)
+          <span style='color:#f39c12;font-weight:bold;'>●</span> ≤ 0,12 €/kWh (Media)
+          <span style='color:#e67e22;font-weight:bold;'>●</span> &gt; 0,12 €/kWh (Cara)
+          <span style='color:#2196F3;font-weight:bold;'>●</span> Hora de comienzo
+          <span style='font-weight:bold;font-size:1.1em;color:#FFD600;'>⚡</span> Uso electrodoméstico
+        </div>
+      </div>
+    `;
+  }
+  
+  const html = `
+    <div style="background: linear-gradient(135deg, ${hourColor}, ${hourColor}dd); color: white; padding: 25px; border-radius: 12px; text-align: center; margin-bottom: 20px;">
+      <h3 style="margin: 0 0 15px 0; font-size: 1.6rem;">💰 Costo Real de tu Consumo</h3>
+      <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+        <div style="font-size: 2.5rem; font-weight: bold; margin-bottom: 5px;">${totalCost.toFixed(4)}€</div>
+        <div style="font-size: 1.1rem; opacity: 0.9;">Por usar ${analysis.appliance}</div>
+        <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">${costInCents} céntimos</div>
+      </div>
+      <div style="font-size: 1.2rem;">
+        ${hourIcon} <strong>${hourQuality}</strong> para consumir
+      </div>
+    </div>
+    
+    ${hourlyChart}
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+      <!-- Detalles del uso -->
+      <div style="background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 20px; border-radius: 10px;">
+        <h4 style="margin: 0 0 15px 0;">📋 Detalles del Uso</h4>
+        <div style="line-height: 1.8;">
+          <div style="margin-bottom: 8px;"><strong>⚡ Electrodoméstico:</strong><br>${analysis.appliance}</div>
+          <div style="margin-bottom: 8px;"><strong>🔋 Consumo:</strong><br>${analysis.consumption} kWh</div>
+          <div style="margin-bottom: 8px;"><strong>⏱️ Duración:</strong><br>${analysis.timing.totalDurationHours.toFixed(2)} horas</div>
+          <div><strong>🕐 Horario:</strong><br>${analysis.timing.startHour.toString().padStart(2, '0')}:${analysis.timing.startMinute.toString().padStart(2, '0')} - ${analysis.timing.endHour.toString().padStart(2, '0')}:${(analysis.timing.endMinute || 0).toString().padStart(2, '0')}</div>
+        </div>
+      </div>
+      
+      <!-- Tu tarifa -->
+      <div style="background: linear-gradient(135deg, #8e44ad, #9b59b6); color: white; padding: 20px; border-radius: 10px;">
+        <h4 style="margin: 0 0 15px 0;">💼 Tu Tarifa</h4>
+        <div style="text-align: center;">
+          <div style="font-size: 1.2rem; font-weight: bold; margin-bottom: 8px;">${analysis.tariffName}</div>
+          <div style="font-size: 0.9rem; opacity: 0.8; margin-bottom: 15px;">${analysis.tariffCompany}</div>
+          <div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 8px;">
+            <div style="font-size: 0.8rem; opacity: 0.8;">Precio ahora:</div>
+            <div style="font-size: 1.3rem; font-weight: bold;">${analysis.currentHourPrice.toFixed(4)}€/kWh</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Consejos de ahorro -->
+      <div style="background: linear-gradient(135deg, #e67e22, #d35400); color: white; padding: 20px; border-radius: 10px;">
+        <h4 style="margin: 0 0 15px 0;">💡 Mejores Horarios Hoy</h4>
+        <div style="font-size: 0.9rem; line-height: 1.6;">
+          <div style="margin-bottom: 10px;"><strong>🟢 Más baratos:</strong></div>
+          ${analysis.bestHours.map(h => `<div style="margin-bottom: 5px;">${h.hour.toString().padStart(2, '0')}:00 - ${h.price.toFixed(4)}€/kWh</div>`).join('')}
+          
+          <div style="margin: 15px 0 10px 0;"><strong>🔴 Más caros:</strong></div>
+          ${analysis.worstHours.map(h => `<div style="margin-bottom: 5px;">${h.hour.toString().padStart(2, '0')}:00 - ${h.price.toFixed(4)}€/kWh</div>`).join('')}
+        </div>
+      </div>
+    </div>
+    
+    
+  `;
+  
+  resultDiv.innerHTML = html;
+  resultDiv.style.display = 'block';
+  resultDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showNewCalculatorResults(data) {
+  // Esta función ya no se usa, el displayNewRealCostAnalysis se encarga de todo
+  console.log('✅ Usando displayNewRealCostAnalysis en su lugar');
+}
+
+function showNewCalculatorError(message) {
+  const resultsDiv = document.getElementById('new-calc-results');
+  resultsDiv.innerHTML = `
+    <div style="background: #e74c3c; border-radius: 15px; padding: 20px; color: white; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 15px;">❌</div>
+      <h3>Error en el Cálculo</h3>
+      <p>${message}</p>
+      <button onclick="document.getElementById('new-calc-results').style.display='none'" 
+              style="background: rgba(255,255,255,0.2); border: none; padding: 10px 20px; border-radius: 8px; color: white; cursor: pointer; margin-top: 10px;">
+        Cerrar
+      </button>
+    </div>
+  `;
+  resultsDiv.style.display = 'block';
+}
+
+
+// Inicializar la nueva calculadora cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🔧 Inicializando nueva calculadora...');
+  updateNewCalculatorFields();
+
+  // --- RESET AUTOMÁTICO DE RESULTADOS EN LA CALCULADORA DE ELECTRODOMÉSTICOS ---
+  const fields = [
+    'new-calc-appliance',
+    'new-calc-consumption',
+    'new-calc-company',
+    'new-calc-tariff',
+    'new-calc-start-hour',
+    'new-calc-start-minute',
+    'new-calc-duration-hours',
+    'new-calc-duration-minutes'
+  ];
+  fields.forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', function() {
+        // Solo oculta resultados, no recalcula automáticamente
+        const results = document.getElementById('new-calc-results');
+        if (results) results.style.display = 'none';
+      });
+    }
+  });
+});
+
+// También inicializar si ya está cargado
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', updateNewCalculatorFields);
+} else {
+  setTimeout(updateNewCalculatorFields, 100);
+}
+
   </script> <!-- Cierre del script existente -->
+
 </body>
 </html>
