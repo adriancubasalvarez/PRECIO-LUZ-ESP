@@ -8834,6 +8834,64 @@ function calculatePreciseCost(timing, pvpcPrices, consumption, companyType, tari
   return totalCost;
 }
 
+// Función para generar recomendaciones inteligentes basadas en horas reales
+function generateSmartHourlyRecommendation(bestHours, currentPrice, currentHour) {
+  if (!bestHours || bestHours.length === 0) {
+    return "Los precios varían durante el día, programa electrodomésticos en horas de menor demanda.";
+  }
+  
+  // Categorizar las mejores horas por franjas
+  const earlyMorning = bestHours.filter(h => h.hour >= 0 && h.hour < 6);   // 00:00-06:00
+  const morning = bestHours.filter(h => h.hour >= 6 && h.hour < 12);       // 06:00-12:00
+  const afternoon = bestHours.filter(h => h.hour >= 12 && h.hour < 18);    // 12:00-18:00
+  const evening = bestHours.filter(h => h.hour >= 18 && h.hour < 22);      // 18:00-22:00
+  const night = bestHours.filter(h => h.hour >= 22 || h.hour < 2);         // 22:00-02:00
+  
+  // Determinar la franja predominante
+  let primaryTimeFrame = "";
+  let frameHours = [];
+  
+  if (earlyMorning.length >= 2) {
+    primaryTimeFrame = "madrugada";
+    frameHours = earlyMorning;
+  } else if (morning.length >= 2) {
+    primaryTimeFrame = "mañana";
+    frameHours = morning;
+  } else if (afternoon.length >= 2) {
+    primaryTimeFrame = "mediodía";
+    frameHours = afternoon;
+  } else if (evening.length >= 2) {
+    primaryTimeFrame = "tarde";
+    frameHours = evening;
+  } else if (night.length >= 2) {
+    primaryTimeFrame = "noche";
+    frameHours = night;
+  } else {
+    // Horas dispersas
+    frameHours = bestHours.slice(0, 3);
+  }
+  
+  // Generar recomendación específica
+  if (primaryTimeFrame) {
+    const startHour = Math.min(...frameHours.map(h => h.hour));
+    const endHour = Math.max(...frameHours.map(h => h.hour)) + 1;
+    
+    const recommendations = {
+      "madrugada": `Las mejores horas son de madrugada (${startHour.toString().padStart(2, '0')}:00-${endHour.toString().padStart(2, '0')}:00). Programa lavadoras y lavavajillas con temporizador.`,
+      "mañana": `Aprovecha la mañana (${startHour.toString().padStart(2, '0')}:00-${endHour.toString().padStart(2, '0')}:00) para usar electrodomésticos. Ideal para tareas domésticas.`,
+      "mediodía": `Las horas de mediodía (${startHour.toString().padStart(2, '0')}:00-${endHour.toString().padStart(2, '0')}:00) son las más económicas hoy. Perfecto para cocinar y limpiar.`,
+      "tarde": `La tarde (${startHour.toString().padStart(2, '0')}:00-${endHour.toString().padStart(2, '0')}:00) ofrece los mejores precios. Usa aire acondicionado o calefacción en estas horas.`,
+      "noche": `Las horas nocturnas (${startHour.toString().padStart(2, '0')}:00-${endHour.toString().padStart(2, '0')}:00) son las más baratas. Carga vehículos eléctricos o usa termo eléctrico.`
+    };
+    
+    return recommendations[primaryTimeFrame];
+  } else {
+    // Horas dispersas - dar recomendación general con horas específicas
+    const hours = bestHours.slice(0, 3).map(h => `${h.hour.toString().padStart(2, '0')}:00`).join(', ');
+    return `Los precios más bajos están a las ${hours}. Programa electrodomésticos en estos horarios específicos.`;
+  }
+}
+
 function displayRealCostAnalysis(analysis) {
   const resultDiv = document.getElementById('hourly-comparison-result');
   
@@ -8841,24 +8899,50 @@ function displayRealCostAnalysis(analysis) {
   const costInCents = Math.round(cost * 100);
   const costPerKwh = cost / analysis.consumption;
   
-  // Determinar si es hora cara o barata
-  const currentHourRank = analysis.bestHours.findIndex(h => h.hour === analysis.timing.startHour);
+  // Determinar si es hora cara o barata de manera más precisa
+  const allHours = [...analysis.bestHours, ...analysis.worstHours].sort((a, b) => a.price - b.price);
+  const currentHourPrice = analysis.timing.startHour;
+  const currentPriceData = allHours.find(h => h.hour === currentHourPrice);
+  
   let hourQuality = '';
   let hourIcon = '';
   let hourColor = '';
+  let qualityMessage = '';
   
-  if (currentHourRank >= 0 && currentHourRank < 3) {
-    hourQuality = 'Hora BARATA';
+  // Buscar la hora actual en los rankings
+  const bestHourRank = analysis.bestHours.findIndex(h => h.hour === currentHourPrice);
+  const worstHourRank = analysis.worstHours.findIndex(h => h.hour === currentHourPrice);
+  
+  if (bestHourRank === 0) {
+    // Es la mejor hora del día
+    hourQuality = 'MEJOR HORA DEL DÍA';
+    hourIcon = '🥇';
+    hourColor = '#27ae60';
+    qualityMessage = '¡Perfecto! Esta es la hora más barata de todo el día.';
+  } else if (bestHourRank >= 1 && bestHourRank <= 2) {
+    // Está entre las 3 mejores
+    hourQuality = 'HORA MUY BARATA';
     hourIcon = '🟢';
     hourColor = '#27ae60';
-  } else if (analysis.worstHours.some(h => h.hour === analysis.timing.startHour)) {
-    hourQuality = 'Hora CARA';
+    qualityMessage = `Excelente elección. Es la ${bestHourRank + 1}ª hora más barata del día.`;
+  } else if (worstHourRank === 0) {
+    // Es la peor hora del día
+    hourQuality = 'PEOR HORA DEL DÍA';
+    hourIcon = '🥶';
+    hourColor = '#e74c3c';
+    qualityMessage = '¡Evítala! Esta es la hora más cara de todo el día.';
+  } else if (worstHourRank >= 1 && worstHourRank <= 2) {
+    // Está entre las 3 peores
+    hourQuality = 'HORA MUY CARA';
     hourIcon = '🔴';
     hourColor = '#e74c3c';
+    qualityMessage = `Hora costosa. Es la ${worstHourRank + 1}ª hora más cara del día.`;
   } else {
-    hourQuality = 'Hora INTERMEDIA';
+    // Hora intermedia
+    hourQuality = 'HORA INTERMEDIA';
     hourIcon = '🟡';
     hourColor = '#f39c12';
+    qualityMessage = 'Precio moderado. Ni la más cara ni la más barata.';
   }
   
   const html = `
@@ -8869,8 +8953,11 @@ function displayRealCostAnalysis(analysis) {
         <div style="font-size: 1.1rem; opacity: 0.9;">Por usar ${analysis.appliance || 'el electrodoméstico'}</div>
         <div style="font-size: 0.9rem; opacity: 0.8; margin-top: 5px;">${costInCents} céntimos</div>
       </div>
-      <div style="font-size: 1.2rem;">
-        ${hourIcon} <strong>${hourQuality}</strong> para consumir
+      <div style="font-size: 1.2rem; margin-bottom: 10px;">
+        ${hourIcon} <strong>${hourQuality}</strong>
+      </div>
+      <div style="font-size: 1rem; opacity: 0.9; line-height: 1.4;">
+        ${qualityMessage}
       </div>
     </div>
     
@@ -8936,10 +9023,7 @@ function displayRealCostAnalysis(analysis) {
       <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px; text-align: center;">
         <div style="font-size: 0.95rem; margin-bottom: 8px;">
           💡 <strong>Consejo del día:</strong> 
-          ${analysis.bestHours[0].hour < 12 ? 
-            `Programa tus electrodomésticos antes de las ${analysis.bestHours[2].hour + 1}:00 para máximo ahorro.` :
-            `Las horas de la madrugada (${analysis.bestHours[0].hour}:00-${analysis.bestHours[2].hour + 1}:00) son las más baratas.`
-          }
+          ${generateSmartHourlyRecommendation(analysis.bestHours, analysis.currentHourPrice, analysis.timing.startHour)}
         </div>
         <div style="font-size: 0.85rem; opacity: 0.8;">
           ⚡ Los precios cambian cada hora según la demanda nacional de electricidad
