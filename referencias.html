@@ -1,0 +1,188 @@
+    <div style="background: #fff3cd; border-left: 4px solid #ff9800; padding: 16px 20px; border-radius: 10px; margin-top: 18px; margin-bottom: 0;">
+      <strong>Nota importante sobre la actualización de tarifas:</strong><br>
+      Actualmente, ninguna de las principales comercializadoras de mercado libre en España ofrece una API pública oficial para obtener automáticamente sus tarifas eléctricas. Por tanto, los datos de tarifas de mercado libre mostrados en esta web se extraen manualmente de las páginas oficiales de cada compañía y pueden variar sin previo aviso. Si alguna comercializadora publica una API oficial en el futuro, se implementará la actualización automática de sus datos.
+    </div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Referencias y Comercializadoras - Mercado Eléctrico Español</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; color: #222; }
+    .container { max-width: 1100px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(44,62,80,0.08); padding: 32px; }
+    h1 { text-align: center; color: #2c3e50; margin-bottom: 30px; }
+    table { width: 100%; border-collapse: collapse; margin: 30px 0; }
+    th, td { border: 1px solid #dfe6e9; padding: 12px 10px; text-align: left; }
+    th { background: #2980b9; color: #fff; }
+    tr:nth-child(even) { background: #f0f4f8; }
+    .fuente { font-size: 0.95em; color: #636e72; }
+    .actualiza { font-size: 0.95em; color: #00b894; }
+    .no-actualiza { font-size: 0.95em; color: #d63031; }
+    .tipo { font-size: 0.95em; color: #636e72; }
+    .logo { font-size: 1.3em; }
+    @media (max-width: 700px) { .container { padding: 10px; } th, td { font-size: 0.95em; } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Referencias y Comercializadoras Usadas</h1>
+    <p>Listado de compañías y comercializadoras de electricidad empleadas en los cálculos y comparativas de la web. Se indica el tipo de compañía, las tarifas consideradas, la fuente de información y si los datos se actualizan automáticamente.</p>
+    <table>
+      <tr>
+        <th>Compañía</th>
+        <th>Tipo</th>
+        <th>Tarifas Usadas</th>
+        <th>Fuente de Información</th>
+        <th>¿Actualización Automática?</th>
+      </tr>
+      <tr>
+        <td class="logo">🏛️ Iberdrola COR<br><span class="fuente">Curenergía</span></td>
+        <td class="tipo">Referencia (COR)</td>
+        <td>PVPC 2.0TD, 2.0A</td>
+  <td>Web oficial Curenergía<br><a href="https://www.curenergia.es/" target="_blank">https://www.curenergia.es/</a><br>Datos PVPC: <a href="https://www.esios.ree.es/" target="_blank">REE ESIOS</a></td>
+        <td class="actualiza">Sí, diario (API REE)</td>
+      </tr>
+      <tr>
+        <td class="logo">🏛️ Endesa COR<br><span class="fuente">Energía XXI</span></td>
+        <td class="tipo">Referencia (COR)</td>
+        <td>PVPC 2.0TD, 2.0A</td>
+  <td>Web oficial Energía XXI<br><a href="https://www.energiaxxi.com/" target="_blank">https://www.energiaxxi.com/</a><br>Datos PVPC: <a href="https://www.esios.ree.es/" target="_blank">REE ESIOS</a></td>
+        <td class="actualiza">Sí, diario (API REE)</td>
+      </tr>
+      <tr>
+        <td class="logo">🏛️ Naturgy COR<br><span class="fuente">Comercializadora Regulada</span></td>
+        <td class="tipo">Referencia (COR)</td>
+        <td>PVPC 2.0TD, 2.0A</td>
+  <td>Web oficial Naturgy Regulada<br><a href="https://www.comercializadoraregulada.es/" target="_blank">https://www.comercializadoraregulada.es/</a><br>Datos PVPC: <a href="https://www.esios.ree.es/" target="_blank">REE ESIOS</a></td>
+        <td class="actualiza">Sí, diario (API REE)</td>
+      </tr>
+      <tr>
+        <td class="logo">🏛️ EDP COR<br><span class="fuente">EDP Comercializadora Último Recurso</span></td>
+        <td class="tipo">Referencia (COR)</td>
+        <td>PVPC 2.0TD, 2.0A</td>
+  <td>Web oficial EDP COR<br><a href="https://www.edpenergia.es/" target="_blank">https://www.edpenergia.es/</a><br>Datos PVPC: <a href="https://www.esios.ree.es/" target="_blank">REE ESIOS</a></td>
+        <td class="actualiza">Sí, diario (API REE)</td>
+      </tr>
+      <tr>
+        <td class="logo">🏛️ Repsol COR<br><span class="fuente">Repsol Comercializadora Último Recurso</span></td>
+        <td class="tipo">Referencia (COR)</td>
+        <td>PVPC 2.0TD, 2.0A</td>
+  <td>Web oficial Repsol COR<br><a href="https://www.repsolluzygas.com/" target="_blank">https://www.repsolluzygas.com/</a><br>Datos PVPC: <a href="https://www.esios.ree.es/" target="_blank">REE ESIOS</a></td>
+        <td class="actualiza">Sí, diario (API REE)</td>
+      </tr>
+      <tr>
+        <td class="logo">🟦 Iberdrola Clientes</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>One Luz, Tempo Happy</td>
+  <td>Web oficial Iberdrola<br><a href="https://www.iberdrola.es/" target="_blank">https://www.iberdrola.es/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🔵 Endesa Energía</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>One Luz, Tempo Fijo</td>
+  <td>Web oficial Endesa<br><a href="https://www.endesa.com/" target="_blank">https://www.endesa.com/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🟢 Naturgy</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Online, Tempo Libre</td>
+  <td>Web oficial Naturgy<br><a href="https://www.naturgy.es/" target="_blank">https://www.naturgy.es/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🔴 EDP Energía</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Comercial</td>
+  <td>Web oficial EDP<br><a href="https://www.edpenergia.es/" target="_blank">https://www.edpenergia.es/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🟡 Repsol</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Eficiencia</td>
+  <td>Web oficial Repsol<br><a href="https://www.repsolluzygas.com/" target="_blank">https://www.repsolluzygas.com/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🟣 TotalEnergies</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Essential</td>
+  <td>Web oficial TotalEnergies<br><a href="https://www.totalenergies.es/" target="_blank">https://www.totalenergies.es/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">☀️ Holaluz</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Justa</td>
+  <td>Web oficial Holaluz<br><a href="https://www.holaluz.com/" target="_blank">https://www.holaluz.com/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🔋 Asenergy</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Indexada, Discriminación Horaria, Verde Plus</td>
+  <td>Web oficial Asenergy<br><a href="https://www.asenergy.es/" target="_blank">https://www.asenergy.es/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">📊 Factor Energía</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Variable, Fija</td>
+  <td>Web oficial Factor Energía<br><a href="https://www.factorenergia.com/" target="_blank">https://www.factorenergia.com/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">💡 Lucera Energía</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Indexada</td>
+  <td>Web oficial Lucera<br><a href="https://www.lucera.es/" target="_blank">https://www.lucera.es/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🌱 Som Energia</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Verde</td>
+  <td>Web oficial Som Energia<br><a href="https://www.somenergia.coop/" target="_blank">https://www.somenergia.coop/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🐙 Octopus Energy</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Octopus Indexada</td>
+  <td>Web oficial Octopus<br><a href="https://octopusenergy.es/" target="_blank">https://octopusenergy.es/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🔌 Nexus Energía</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Indexada</td>
+  <td>Web oficial Nexus<br><a href="https://www.nexusenergia.com/" target="_blank">https://www.nexusenergia.com/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">💰 Gana Energía</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Online</td>
+  <td>Web oficial Gana Energía<br><a href="https://ganaenergia.com/" target="_blank">https://ganaenergia.com/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+      <tr>
+        <td class="logo">🌟 Pepe Energy</td>
+        <td class="tipo">Mercado Libre</td>
+        <td>Tarifa Pepe</td>
+  <td>Web oficial Pepe Energy<br><a href="https://pepeenergy.com/" target="_blank">https://pepeenergy.com/</a></td>
+        <td class="no-actualiza">No, revisión manual</td>
+      </tr>
+    </table>
+    <p class="fuente">Fuentes principales: <a href="https://www.esios.ree.es/" target="_blank">Red Eléctrica de España (REE ESIOS)</a>, webs oficiales de cada comercializadora, y comparadores sectoriales. Las tarifas PVPC se actualizan automáticamente a diario mediante la API oficial de REE. Las tarifas de mercado libre se revisan manualmente y pueden variar según promociones y condiciones de cada compañía.</p>
+
+    <div style="background: #f9fbe7; border-left: 4px solid #f39c12; padding: 18px 22px; border-radius: 10px; margin-top: 24px;">
+      <strong>¿Cómo se obtienen las tarifas de mercado libre?</strong><br>
+      Las tarifas que requieren actualización manual se recopilan consultando directamente las webs oficiales de cada comercializadora, accediendo a sus secciones de tarifas para particulares y anotando los precios y condiciones vigentes en el momento de la revisión. En algunos casos, también se han contrastado con comparadores sectoriales y folletos comerciales públicos. Estas tarifas pueden variar por promociones, cambios de mercado o revisiones de la propia compañía, por lo que se recomienda siempre verificar en la web oficial antes de contratar.
+    </div>
+  </div>
+</body>
+</html>
